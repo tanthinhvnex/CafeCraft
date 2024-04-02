@@ -237,46 +237,45 @@ window.addEventListener("template-loaded", () => {
 const isDark = localStorage.dark === "true";
 document.querySelector("html").classList.toggle("dark", isDark);
 
-// Dùng để lấy dữ liệu, tạo một đối tượng JSON, gọi API
 document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector(".filter__form");
-    const minPriceInput = form.querySelector(
-        '.filter__form-text-input--small input[placeholder="Min"]'
-    );
-    const maxPriceInput = form.querySelector(
-        '.filter__form-text-input--small input[placeholder="Max"]'
-    );
-    const weightSelect = form.querySelector("#weightSelect");
-    const sizeRadioInputs = form.querySelectorAll('input[name="size"]');
+    // Dùng để lấy dữ liệu, tạo một đối tượng JSON, gọi API
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector(".filter__form");
+        const minPriceInput = form.querySelector(
+            '.filter__form-text-input--small input[placeholder="Min"]'
+        );
+        const maxPriceInput = form.querySelector(
+            '.filter__form-text-input--small input[placeholder="Max"]'
+        );
+        const sizeRadioInputs = form.querySelectorAll('input[name="size"]');
 
-    form.addEventListener("submit", function (event) {
-        event.preventDefault();
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
 
-        const data = {
-            minPrice: minPriceInput.value,
-            maxPrice: maxPriceInput.value,
-            weight: weightSelect.value,
-            size: Array.from(sizeRadioInputs).find(input => input.checked)
-                .value,
-        };
+            const data = {
+                minPrice: minPriceInput.value,
+                maxPrice: maxPriceInput.value,
+                size: Array.from(sizeRadioInputs).find(input => input.checked)
+                    .value,
+            };
 
-        // Gửi dữ liệu với fetch
-        fetch("url_cua_api", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error("Network response was not ok.");
+            // Gửi dữ liệu với fetch
+            fetch("url_cua_api", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
             })
-            .then(data => {
-                var productArray = data.map(function (product) {
-                    return `
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error("Network response was not ok.");
+                })
+                .then(data => {
+                    var productArray = data.map(function (product) {
+                        return `
                         <div class="col">
                             <article class="product-card">
                                 <div class="product-card__img-wrap">
@@ -322,15 +321,31 @@ document.addEventListener("DOMContentLoaded", function () {
                             </article>
                         </div>
                     `;
+                    });
+                    productAns = productArray.join("");
+                    document.getElementById("productList").innerHTML =
+                        productAns;
+                })
+                .catch(error => {
+                    console.error(
+                        "There was a problem with the fetch operation:",
+                        error
+                    );
                 });
-                productAns = productArray.join("");
-                document.getElementById("productList").innerHTML = productAns;
-            })
-            .catch(error => {
-                console.error(
-                    "There was a problem with the fetch operation:",
-                    error
-                );
-            });
+        });
+    });
+    // Hình trái tim
+    var likeButtons = document.querySelectorAll(
+        ".like-btn.prod-info__like-btn"
+    );
+    // Hàm để toggle class 'like-btn--liked'
+    function toggleLike(event) {
+        event.preventDefault();
+        this.classList.toggle("like-btn--liked");
+    }
+
+    // Thêm sự kiện click cho mỗi button
+    likeButtons.forEach(function (button) {
+        button.addEventListener("click", toggleLike);
     });
 });

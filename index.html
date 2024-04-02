@@ -191,34 +191,11 @@
 
                                     <!-- Filter column 2 -->
                                     <div class="filter__col">
-                                        <label
-                                            for="weightSelect"
-                                            class="form__label"
-                                            >Weight/Size</label
-                                        >
-                                        <div class="filter__form-group">
-                                            <div class="form__select-wrap">
-                                                <select
-                                                    class="form__select form__select--large"
-                                                    id="weightSelect">
-                                                    <option value="">
-                                                        Weight
-                                                    </option>
-                                                    <option value="500">
-                                                        300g
-                                                    </option>
-                                                    <option value="700">
-                                                        500g
-                                                    </option>
-                                                    <option value="1000">
-                                                        700g
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="filter__form-group">
+                                        <div
+                                            class="filter__form-group filter__form-group--large">
                                             <div class="form__tags">
-                                                <div class="form__tag">
+                                                <div
+                                                    class="form__tag prod-info__tag form__tag--equal">
                                                     <label
                                                         class="radio"
                                                         for="small">
@@ -227,10 +204,11 @@
                                                             type="radio"
                                                             name="size"
                                                             id="small" />
-                                                        Small
+                                                        Small (500g)
                                                     </label>
                                                 </div>
-                                                <div class="form__tag">
+                                                <div
+                                                    class="form__tag prod-info__tag form__tag--equal">
                                                     <label
                                                         class="radio"
                                                         for="medium">
@@ -239,10 +217,11 @@
                                                             type="radio"
                                                             name="size"
                                                             id="medium" />
-                                                        Medium
+                                                        Medium (1000g)
                                                     </label>
                                                 </div>
-                                                <div class="form__tag">
+                                                <div
+                                                    class="form__tag prod-info__tag form__tag--equal">
                                                     <label
                                                         class="radio"
                                                         for="large">
@@ -251,7 +230,7 @@
                                                             type="radio"
                                                             name="size"
                                                             id="large" />
-                                                        Large
+                                                        Large (2000g)
                                                     </label>
                                                 </div>
                                             </div>
@@ -288,8 +267,7 @@
                                         alt=""
                                         class="product-card__thumb" />
                                 </a>
-                                <button
-                                    class="like-btn like-btn--liked product-card__like-btn">
+                                <button class="like-btn product-card__like-btn">
                                     <img
                                         src="./assets/icons/heart.svg"
                                         alt=""
@@ -444,8 +422,7 @@
                                         alt=""
                                         class="product-card__thumb" />
                                 </a>
-                                <button
-                                    class="like-btn like-btn--liked product-card__like-btn">
+                                <button class="like-btn product-card__like-btn">
                                     <img
                                         src="./assets/icons/heart.svg"
                                         alt=""
@@ -600,8 +577,7 @@
                                         alt=""
                                         class="product-card__thumb" />
                                 </a>
-                                <button
-                                    class="like-btn like-btn--liked product-card__like-btn">
+                                <button class="like-btn product-card__like-btn">
                                     <img
                                         src="./assets/icons/heart.svg"
                                         alt=""
@@ -674,6 +650,7 @@
 
         <!-- Footer -->
         <footer id="footer" class="footer"></footer>
+        <script src="scripts.js"></script>
         <script>
             load("#footer", "./templates/footer.html");
         </script>

@@ -30,7 +30,7 @@
         <!-- Styles -->
         <link rel="stylesheet" href="./assets/css/main.css" />
 
-        <!-- Scripts -->
+        <!-- JS -->
         <script src="./assets/js/scripts.js"></script>
     </head>
 
@@ -171,42 +171,70 @@
                                             <label
                                                 for=""
                                                 class="form__label prod-info__label"
-                                                >Size/Weight</label
+                                                >Number</label
                                             >
-                                            <div class="filter__form-group">
-                                                <div class="form__select-wrap">
+                                            <div
+                                                class="filter__form-group filter__form-group--inline">
+                                                <div>
                                                     <div
-                                                        class="form__select"
-                                                        style="--width: 146px">
-                                                        500g
-                                                        <img
-                                                            src="./assets/icons/select-arrow.svg"
-                                                            alt=""
-                                                            class="form__select-arrow icon" />
-                                                    </div>
-                                                    <div class="form__select">
-                                                        Gram
-                                                        <img
-                                                            src="./assets/icons/select-arrow.svg"
-                                                            alt=""
-                                                            class="form__select-arrow icon" />
+                                                        class="filter__form-text-input filter__form-text-input--small">
+                                                        <input
+                                                            type="text"
+                                                            name=""
+                                                            id=""
+                                                            class="filter__form-input filter__form-input--fsize"
+                                                            value="1" />
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <label
+                                                for=""
+                                                class="form__label prod-info__label"
+                                                >Size</label
+                                            >
+
                                             <div class="filter__form-group">
                                                 <div class="form__tags">
-                                                    <button
+                                                    <div
                                                         class="form__tag prod-info__tag">
-                                                        Small
-                                                    </button>
-                                                    <button
+                                                        <label
+                                                            class="radio"
+                                                            for="small">
+                                                            <input
+                                                                value="small"
+                                                                type="radio"
+                                                                name="size"
+                                                                id="small" />
+                                                            Small (500g)
+                                                        </label>
+                                                    </div>
+                                                    <div
                                                         class="form__tag prod-info__tag">
-                                                        Medium
-                                                    </button>
-                                                    <button
+                                                        <label
+                                                            class="radio"
+                                                            for="medium">
+                                                            <input
+                                                                value="medium"
+                                                                type="radio"
+                                                                name="size"
+                                                                id="medium" />
+                                                            Medium (1000g)
+                                                        </label>
+                                                    </div>
+                                                    <div
                                                         class="form__tag prod-info__tag">
-                                                        Large
-                                                    </button>
+                                                        <label
+                                                            class="radio"
+                                                            for="large">
+                                                            <input
+                                                                value="large"
+                                                                type="radio"
+                                                                name="size"
+                                                                id="large" />
+                                                            Large (2000g)
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -284,7 +312,7 @@
                                                             <img
                                                                 src="./assets/icons/heart-red.svg"
                                                                 alt=""
-                                                                class="like-btn__icon--liked icon" />
+                                                                class="like-btn__icon--liked" />
                                                         </button>
                                                     </div>
                                                 </div>
@@ -1205,6 +1233,26 @@
         </main>
         <!-- Footer -->
         <footer id="footer" class="footer"></footer>
+        <!-- <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Lấy tất cả các button với class like-btn product-card__like-btn
+                var likeButtons = document.querySelectorAll(
+                    ".like-btn.prod-info__like-btn"
+                );
+
+                // Function để toggle class like-btn--liked
+                function toggleLike() {
+                    this.classList.toggle("like-btn--liked");
+                }
+
+                // Thêm sự kiện click cho mỗi button
+                likeButtons.forEach(function (button) {
+                    event.preventDefault();
+                    button.addEventListener("click", toggleLike);
+                });
+            });
+        </script> -->
+
         <script>
             load("#footer", "./templates/footer.html");
         </script>
