@@ -336,7 +336,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     // Hình trái tim
     var likeButtons = document.querySelectorAll(
-        ".like-btn.prod-info__like-btn"
+        ".like-btn.prod-info__like-btn, .like-btn.product-card__like-btn"
     );
     // Hàm để toggle class 'like-btn--liked'
     function toggleLike(event) {
