@@ -126,11 +126,10 @@
                 full_name: fullName
             }
 
-            fetch(`http://localhost:3000/users` , {
+            fetch(`https://be-dacnpm.onrender.com/users` , {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin' : '*'
                 },
                 body: JSON.stringify(body)
             }).then(response => {
