@@ -304,7 +304,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                         ${product.name}
                                     </a>
                                 </h3>
-                                <p class="product-card__brand">Lavazza</p>
                                 <div class="product-card__row">
                                     <span class="product-card__price">
                                         ${product.price}

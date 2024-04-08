@@ -418,7 +418,7 @@
 }
 
 .product-card {
-  height: 386px;
+  min-height: 386px;
   padding: 16px;
   border-radius: 20px;
   background: var(--product-card-bg);
@@ -443,6 +443,13 @@
 }
 .product-card__title {
   margin-top: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  height: 48px;
 }
 .product-card__title, .product-card__price, .product-card__score {
   font-size: 1.6rem;
@@ -456,6 +463,7 @@
   line-height: 146.667%;
 }
 .product-card__row {
+  margin-top: 15px;
   display: flex;
   align-items: center;
 }

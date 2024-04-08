@@ -76,7 +76,7 @@
         }
 
         &-inner {
-            padding: 50px 0;
+            padding: 40px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -89,7 +89,7 @@
         }
     }
     &__heading {
-        margin-top: 50px;
+        margin-top: 28px;
         font-size: 3rem;
         font-weight: 500;
         line-height: 146.667%;
@@ -145,7 +145,7 @@
         display: flex;
         flex-direction: column;
         gap: 30px;
-        margin-top: 50px;
+        margin-top: 40px;
 
         @include abstracts.screen(md) {
             margin-top: 40px;
@@ -158,7 +158,7 @@
     }
 
     &__text {
-        margin-top: 70px;
+        margin-top: 50px;
         font-size: 1.8rem;
         line-height: 144.444%;
         color: #9e9da8;

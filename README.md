@@ -1,3 +1,7 @@
+# Ngôn ngữ: HTML/CSS, Sass, Javascript.
+
+-   CSS có cài đặt sẵn Grid System của Bootstrap (chỉ Grid thôi nha)
+
 # Để chạy được project
 
 1.  Project này có sử dụng Sass, do đó bạn cần cài đặt một số cái như sau:
