@@ -46,13 +46,51 @@
                         class="logo__img" />
                     <h1 class="logo__title">Grocery</h1>
                 </a>
-                <img
-                    src="./assets/img/auth/intro.svg"
-                    alt=""
-                    class="auth__intro-img" />
-                <p class="auth__intro-text">
-                    The best of luxury brand values, high quality products, and
-                    innovative services
+                <h1 class="auth__heading">Sign Up</h1>
+                <p class="auth__desc">Let’s create your account and Shop like a pro and save money.</p>
+                <form action="#" class="form auth__form" id="signup-form">
+                    <div class="form__group">
+                        <div class="form__text-input">
+                            <input type="text" autofocus placeholder="Full name" class="form__input" required id="input_full_name">
+                            <img src="./assets/icons/message.svg" alt="" class="form__input-icon">
+                            <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error">
+                        </div>
+                        <p class="form__error">Full name should not empty</p>
+                    </div>
+                    <div class="form__group">
+                        <div class="form__text-input">
+                            <input type="email" autofocus placeholder="Email" class="form__input" required id="input_email">
+                            <img src="./assets/icons/message.svg" alt="" class="form__input-icon">
+                            <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error">
+                        </div>
+                        <p class="form__error">Email is not in correct format</p>
+                    </div>
+                    <div class="form__group">
+                        <div class="form__text-input">
+                            <input type="password" placeholder="Password" class="form__input" required minlength="6" id="input_password">
+                            <img src="./assets/icons/lock.svg" alt="" class="form__input-icon">
+                            <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error">
+                        </div>
+                        <p class="form__error">Password at least 6 characters</p>
+                    </div>
+                    <div class="form__group">
+                        <div class="form__text-input">
+                            <input type="password" placeholder="Confirm Password" class="form__input" required
+                                minlength="6">
+                            <img src="./assets/icons/lock.svg" alt="" class="form__input-icon">
+                            <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error">
+                        </div>
+                        <p class="form__error">Password at least 6 characters</p>
+                    </div>
+                   
+
+                    <div class="form__group auth__btn-group">
+                        <button class="btn btn--primary auth__btn form__submit-btn">Sign Up</button>
+                    </div>
+                </form>
+
+                <p class="auth__text">You have an account yet?
+                    <a href="./sign-in.html" class="auth__link auth__text-link">Sign In</a>
                 </p>
                 <button
                     class="auth__intro-next d-none d-md-flex js-toggle"
@@ -60,6 +98,53 @@
                     <img src="./assets/img/auth/intro-arrow.svg" alt="" />
                 </button>
             </div>
+        </div>
+    </main>
+    <script>
+        window.dispatchEvent(new Event("template-loaded"));
+        
+
+        document.getElementById('signup-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+
+            const inputFullName = document.getElementById('input_full_name');
+            const inputEmail = document.getElementById('input_email');
+            const inputPassword = document.getElementById('input_password');
+
+            const fullName = inputFullName?  inputFullName.value : '';
+            const email = inputEmail ?  inputEmail.value : '';
+            const password = inputPassword ? inputPassword.value : '';
+
+            if(!fullName || !email || !password) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            const body = {
+                account: email,
+                password: password,
+                full_name: fullName
+            }
+
+            fetch(`https://be-dacnpm.onrender.com/users` , {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            }).then(response => {
+            }).catch(error => {
+                alert('Sign up failed, please sign up again!');
+            }).finally(() => {
+                window.location.href = './sign-in.html';
+            });
+
+        
+        });
+
+    </script>
+</body>
 
             <!-- Auth content -->
             <div id="auth__content" class="auth__content hide">
