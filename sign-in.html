@@ -9,17 +9,20 @@
         <link
             rel="apple-touch-icon"
             sizes="76x76"
-            href="assets/favicon/apple-touch-icon.png" />
+            href="assets/favicon/apple-touch-icon.png"
+        />
         <link
             rel="icon"
             type="image/png"
             sizes="32x32"
-            href="assets/favicon/favicon-32x32.png" />
+            href="assets/favicon/favicon-32x32.png"
+        />
         <link
             rel="icon"
             type="image/png"
             sizes="16x16"
-            href="assets/favicon/favicon-16x16.png" />
+            href="assets/favicon/favicon-16x16.png"
+        />
         <link rel="manifest" href="assets/favicon/site.webmanifest" />
         <meta name="msapplication-TileColor" content="#da532c" />
         <meta name="theme-color" content="#ffffff" />
@@ -41,18 +44,13 @@
                 <img
                     src="./assets/img/auth/intro.svg"
                     alt=""
-                    class="auth__intro-img" />
+                    class="auth__intro-img"
+                />
                 <p class="auth__intro-text">
                     The best of luxury brand values, high quality products, and
                     innovative services
                 </p>
             </div>
-        </div>
-    </main>
-    <script>
-            window.dispatchEvent(new Event("template-loaded"));
-    </script>
-</body>
 
             <!-- Auth content -->
             <div class="auth__content">
@@ -62,7 +60,8 @@
                         <img
                             src="./assets/icons/logo.svg"
                             alt="grocery"
-                            class="logo__img" />
+                            class="logo__img"
+                        />
                         <h2 class="logo__title">Grocery</h2>
                     </a>
                     <h1 class="auth__heading">Hello Again!</h1>
@@ -78,15 +77,18 @@
                                     placeholder="Email"
                                     class="form__input"
                                     required
-                                    id="input_email" />
+                                    id="input_email"
+                                />
                                 <img
                                     src="./assets/icons/message.svg"
                                     alt=""
-                                    class="form__input-icon" />
+                                    class="form__input-icon"
+                                />
                                 <img
                                     src="./assets/icons/form-error.svg"
                                     alt=""
-                                    class="form__input-icon-error" />
+                                    class="form__input-icon-error"
+                                />
                             </div>
                             <p class="form__error">
                                 Email is not in correct format
@@ -100,15 +102,18 @@
                                     class="form__input"
                                     required
                                     minlength="6"
-                                    id="input_password" />
+                                    id="input_password"
+                                />
                                 <img
                                     src="./assets/icons/lock.svg"
                                     alt=""
-                                    class="form__input-icon" />
+                                    class="form__input-icon"
+                                />
                                 <img
                                     src="./assets/icons/form-error.svg"
                                     alt=""
-                                    class="form__input-icon-error" />
+                                    class="form__input-icon-error"
+                                />
                             </div>
                             <p class="form__error">
                                 Password at least 6 characters
@@ -137,7 +142,8 @@
 
                         <div class="form__group auth__btn-group">
                             <button
-                                class="btn btn--primary auth__btn form__submit-btn">
+                                class="btn btn--primary auth__btn form__submit-btn"
+                            >
                                 Login
                             </button>
                             <!-- <button
@@ -168,9 +174,12 @@
                 .getElementById("signin-form")
                 .addEventListener("submit", function (event) {
                     event.preventDefault();
-                    const inputEmail = document.getElementById("input_email");
-                    const inputPassword =
-                        document.getElementById("input_password");
+                    const inputEmail = document
+                        .getElementById("input_email")
+                        .value.trim();
+                    const inputPassword = document
+                        .getElementById("input_password")
+                        .value.trim();
 
                     const body = {
                         password: inputPassword,
@@ -186,11 +195,11 @@
                             body: JSON.stringify(body),
                         }
                     )
-                        .then(response => response.json())
-                        .then(data => {
+                        .then((response) => response.json())
+                        .then((data) => {
                             window.location.href = "./index-logined.html";
                         })
-                        .catch(error => {
+                        .catch((error) => {
                             alert("Sign in failed, please sign in again!");
                         });
                 });

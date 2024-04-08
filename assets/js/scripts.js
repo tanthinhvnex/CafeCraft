@@ -17,8 +17,8 @@ function load(selector, path) {
     }
 
     fetch(path)
-        .then(res => res.text())
-        .then(html => {
+        .then((res) => res.text())
+        .then((html) => {
             if (html !== cached) {
                 $(selector).innerHTML = html;
                 localStorage.setItem(path, html);
@@ -77,7 +77,7 @@ const calArrowPos = debounce(() => {
 
     const items = $$(".js-dropdown-list > li");
 
-    items.forEach(item => {
+    items.forEach((item) => {
         const arrowPos = item.offsetLeft + item.offsetWidth / 2;
         item.style.setProperty("--arrow-left-pos", `${arrowPos}px`);
     });
@@ -104,19 +104,19 @@ function handleActiveMenu() {
     const menus = $$(".js-menu-list");
     const activeClass = "menu-column__item--active";
 
-    const removeActive = menu => {
+    const removeActive = (menu) => {
         menu.querySelector(`.${activeClass}`)?.classList.remove(activeClass);
     };
 
     const init = () => {
-        menus.forEach(menu => {
+        menus.forEach((menu) => {
             const items = menu.children;
             if (!items.length) return;
 
             removeActive(menu);
             if (window.innerWidth > 991) items[0].classList.add(activeClass);
 
-            Array.from(items).forEach(item => {
+            Array.from(items).forEach((item) => {
                 item.onmouseenter = () => {
                     if (window.innerWidth <= 991) return;
                     removeActive(menu);
@@ -134,7 +134,7 @@ function handleActiveMenu() {
 
     init();
 
-    dropdowns.forEach(dropdown => {
+    dropdowns.forEach((dropdown) => {
         dropdown.onmouseleave = () => init();
     });
 }
@@ -149,12 +149,12 @@ function handleActiveMenu() {
 window.addEventListener("template-loaded", initJsToggle);
 
 function initJsToggle() {
-    $$(".js-toggle").forEach(button => {
+    $$(".js-toggle").forEach((button) => {
         const target = button.getAttribute("toggle-target");
         if (!target) {
             document.body.innerText = `Cần thêm toggle-target cho: ${button.outerHTML}`;
         }
-        button.onclick = e => {
+        button.onclick = (e) => {
             e.preventDefault();
 
             if (!$(target)) {
@@ -181,7 +181,7 @@ function initJsToggle() {
 window.addEventListener("template-loaded", () => {
     const links = $$(".js-dropdown-list > li > a");
 
-    links.forEach(link => {
+    links.forEach((link) => {
         link.onclick = () => {
             if (window.innerWidth > 991) return;
             const item = link.closest("li");
@@ -198,7 +198,7 @@ window.addEventListener("template-loaded", () => {
     const contentActive = `${contentsSelector}--current`;
 
     const tabContainers = $$(".js-tabs");
-    tabContainers.forEach(tabContainer => {
+    tabContainers.forEach((tabContainer) => {
         const tabs = tabContainer.querySelectorAll(`.${tabsSelector}`);
         const contents = tabContainer.querySelectorAll(`.${contentsSelector}`);
         tabs.forEach((tab, index) => {
@@ -255,7 +255,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = {
                 minPrice: minPriceInput.value,
                 maxPrice: maxPriceInput.value,
-                size: Array.from(sizeRadioInputs).find(input => input.checked)
+                size: Array.from(sizeRadioInputs).find((input) => input.checked)
                     .value,
             };
 
@@ -267,13 +267,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: JSON.stringify(data),
             })
-                .then(response => {
+                .then((response) => {
                     if (response.ok) {
                         return response.json();
                     }
                     throw new Error("Network response was not ok.");
                 })
-                .then(data => {
+                .then((data) => {
                     var productArray = data.map(function (product) {
                         return `
                         <div class="col">
@@ -325,7 +325,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.getElementById("productList").innerHTML =
                         productAns;
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error(
                         "There was a problem with the fetch operation:",
                         error
