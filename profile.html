@@ -228,7 +228,7 @@
                 <div class="row gy-3">
                   <!-- My wallet -->
                   <div class="col-12">
-                    <h2 class="cart-info__heading">My Wallet</h2>
+                    <h2 class="cart-info__heading">Payment Information</h2>
                     <p class="cart-info__desc profile__desc">Payment methods</p>
 
                     <div
@@ -238,9 +238,9 @@
                   </div>
                   <!-- Account info -->
                   <div class="col-12">
-                    <h2 class="cart-info__heading">Account info</h2>
+                    <h2 class="cart-info__heading">User Information</h2>
                     <p class="cart-info__desc profile__desc">
-                      Addresses, contact information and password
+                      Email, phone number, and address number
                     </p>
                     <div class="row gy-md-2 row-cols-2 row-cols-lg-1">
                       <!-- Account info 1 -->
@@ -302,16 +302,16 @@
                     </div>
                   </div>
 
-                  <div class="col-12">
-                    <h2 class="cart-info__heading">Lists</h2>
-                    <p class="cart-info__desc profile__desc">
-                      2 items - Primary
+                  <div class="col-12" id="history">
+                    <h2 class="cart-info__heading">Shopping History</h2>
+                    <p class="cart-info__desc profile__desc" id="historyTitle">
+                      You haven't bought anything yet!
                     </p>
 
                     <!-- Favourite item 1 -->
-                    <article class="favourite-item">
+                    <!-- <article class="favourite-item">
                       <img
-                        src="./assets/img/product/item-1.png"
+                        src="https://trungnguyenecoffee.com/wp-content/uploads/2020/09/HOP-PHIN-VNESE-BLENDPNG-1-e1599214126715.png"
                         alt=""
                         class="favourite-item__thumb"
                       />
@@ -328,27 +328,7 @@
                       </div>
                     </article>
 
-                    <div class="separate" style="--margin: 20px"></div>
-
-                    <!-- Favourite item 2 -->
-                    <article class="favourite-item">
-                      <img
-                        src="./assets/img/product/item-2.png"
-                        alt=""
-                        class="favourite-item__thumb"
-                      />
-                      <div>
-                        <h3 class="favourite-item__title">
-                          Lavazza Coffee Blends - Try the Italian Espresso
-                        </h3>
-                        <div class="favourite-item__content">
-                          <span class="favourite-item__price">$53.00</span>
-                          <button class="btn btn--primary btn--rounded">
-                            Add to cart
-                          </button>
-                        </div>
-                      </div>
-                    </article>
+                    <div class="separate" style="--margin: 20px"></div> -->
                   </div>
                 </div>
               </div>
@@ -365,6 +345,7 @@
 
       fetchUserInformation();
       fetchUserPaymentInformation();
+      fetchHistory();
 
       async function fetchUserInformation() {
         const response = await fetch(
@@ -443,6 +424,60 @@
                         </a>
                       </div>`;
         container.innerHTML += addNewCard;
+      }
+
+      async function fetchHistory() {
+        const response = await fetch(`http://localhost:3000/bills/${userId}`);
+        const data = await response.json();
+
+        const container = document.getElementById("history");
+        const containerTitle = document.getElementById("historyTitle");
+        const totalPrice =
+          data.reduce((acc, cur) => acc + cur.total_price, 0) * 1000;
+        const formattedTotalPrice = totalPrice
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+        containerTitle.innerHTML =
+          data.length > 0
+            ? `${data.length} ${
+                data.length > 1 ? "bills" : "bill"
+              } - Total: ${formattedTotalPrice} VND`
+            : "You haven't bought anything yet!";
+        data.forEach((obj, index) => {
+          const date = new Date(obj.created_at);
+          const day = date.getDate();
+          const month = date.getMonth() + 1;
+          const year = date.getFullYear();
+
+          const title = `Purchase made on ${day}/${month}/${year} | ${
+            obj.id_products.length
+          } ${obj.id_products.length > 1 ? "items" : "item"}`;
+          const formattedPrice = (obj.total_price * 1000)
+            .toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+          const ele = ` <article class="favourite-item">
+                      <img
+                        src="https://trungnguyenecoffee.com/wp-content/uploads/2020/09/HOP-PHIN-VNESE-BLENDPNG-1-e1599214126715.png"
+                        alt=""
+                        class="favourite-item__thumb"
+                      />
+                      <div>
+                        <h3 class="favourite-item__title">
+                         ${title}
+                        </h3>
+                        <div class="favourite-item__content">
+                          <span class="favourite-item__price">${formattedPrice} VND</span>
+                        </div>
+                      </div>
+                    </article>`;
+
+          container.innerHTML += ele;
+          if (index < data.length - 1) {
+            container.innerHTML += `<div class="separate" style="--margin: 20px"></div>`;
+          }
+        });
       }
 
       load("#footer", "./templates/footer.html");
