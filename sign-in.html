@@ -66,10 +66,13 @@
                     </div>
 
                     <div class="form__group auth__btn-group">
-                        <button class="btn btn--primary auth__btn form__submit-btn">
-                            Login
+                        <button class="btn btn--primary auth__btn form__submit-btn" id="signin-btn">
+                            <span id="signin-btn-text">Login</span>
+                            <!-- Spinner sẽ ẩn ban đầu -->
+                            <span id="signin-btn-spinner" class="spinner" style="display: none;"></span>
                         </button>
                     </div>
+
                 </form>
 
                 <p class="auth__text">
@@ -79,9 +82,6 @@
             </div>
         </div>
     </main>
-    <div id="spinner" class="spinner-container" style="display: none;">
-        <div class="spinner"></div>
-    </div>
     <script>
         window.dispatchEvent(new Event("template-loaded"));
 
@@ -146,9 +146,13 @@
                     alert('Please correct the errors in the form before submitting.');
                     return;
                 } else {
-                    showSpinner();
                     account = inputAccount.value.trim();
                     password = inputPassword.value;
+
+                    // Hide login text and show spinner
+                    document.getElementById('signin-btn-text').style.display = 'none';
+                    document.getElementById('signin-btn-spinner').style.display = 'inline-block';
+
                     const body = {
                         password: password,
                     };
@@ -162,16 +166,21 @@
                     })
                         .then(response => response.json())
                         .then((response) => {
+                            // Reset button text and hide spinner
+                            document.getElementById('signin-btn-text').style.display = 'inline';
+                            document.getElementById('signin-btn-spinner').style.display = 'none';
                             window.location.href = "./index-logined.html";
                         })
                         .catch((error) => {
+                            // Reset button text and hide spinner
+                            document.getElementById('signin-btn-text').style.display = 'inline';
+                            document.getElementById('signin-btn-spinner').style.display = 'none';
                             alert("Sign in failed, please sign in again!");
                         })
-                        .finally(() => {
-                            hideSpinner();
-                        });
                 }
             });
+
+
         });
 
 

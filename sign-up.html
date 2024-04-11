@@ -92,9 +92,12 @@
 
                     <div class="form__group auth__btn-group">
                         <button class="btn btn--primary auth__btn form__submit-btn">
-                            Sign Up
+                            <span id="signup-btn-text">Sign up</span>
+                            <!-- Spinner sẽ ẩn ban đầu -->
+                            <span id="signup-btn-spinner" class="spinner" style="display: none;"></span>
                         </button>
                     </div>
+
                 </form>
 
                 <p class="auth__text">
@@ -203,6 +206,11 @@
                     account = inputAccount.value.trim();
                     password = inputPassword.value;
                     fullName = inputFullName.value.trim();
+
+                    // Hide login text and show spinner
+                    document.getElementById('signup-btn-text').style.display = 'none';
+                    document.getElementById('signup-btn-spinner').style.display = 'inline-block';
+
                     const body = {
                         account: account,
                         password: password,
@@ -218,14 +226,17 @@
                         body: JSON.stringify(body),
                     })
                         .then((response) => {
+                            // Reset button text and hide spinner
+                            document.getElementById('signup-btn-text').style.display = 'inline';
+                            document.getElementById('signup-btn-spinner').style.display = 'none';
                             window.location.href = "./sign-in.html";
                         })
                         .catch((error) => {
+                            // Reset button text and hide spinner
+                            document.getElementById('signup-btn-text').style.display = 'inline';
+                            document.getElementById('signup-btn-spinner').style.display = 'none';
                             alert("Sign up failed, please sign up again!");
                         })
-                        .finally(() => {
-                            hideSpinner();
-                        });
                 }
             });
         });

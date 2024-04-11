@@ -79,16 +79,16 @@
         <section class="home__container">
             <div class="home__row">
                 <h2 class="home__heading">Product</h2>
+                <div id="loadingSpinner" class="loading-spinner">
+                </div>
                 <div id="filter"></div>
                 <script>
                     load("#filter", "./templates/filter.html");
                 </script>
             </div>
+
             <div id="productList" class="row row-cols-5 row-cols-lg-2 row-cols-sm-1 g-3">
             </div>
-
-            <!-- Button: see more -->
-            <button id="loadMore" class="load-more-btn btn btn--primary">See more</button>
         </section>
     </div>
 
@@ -98,17 +98,28 @@
         fetchProducts();
         async function fetchProducts() {
             try {
+                // Hiển thị spinner
+                document.getElementById('loadingSpinner').style.display = 'block';
+
                 const response = await fetch('https://be-dacnpm.onrender.com/products');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const products = await response.json();
+
+                // Ẩn spinner khi dữ liệu đã tải xong
+                document.getElementById('loadingSpinner').style.display = 'none';
+
                 displayTopRatedProducts(products);
                 displayProducts(products);
             } catch (error) {
                 console.log('Fetch error: ' + error.message);
+                // Ẩn spinner nếu có lỗi
+                document.getElementById('loadingSpinner').style.display = 'none';
             }
         }
+
+
 
         function displayTopRatedProducts(products) {
             // Sắp xếp sản phẩm theo rating từ cao xuống thấp
@@ -139,27 +150,15 @@
             });
         }
 
-        // Xử lý hiển thị tối đa 15 sản phẩm 1 lần
-        let currentProductIndex = 0; // Lưu trữ chỉ số của sản phẩm cuối cùng được hiển thị
-        const productsPerPage = 15; // Số lượng sản phẩm được hiển thị mỗi lần
-
-        // Hàm hiển thị sản phẩm với giới hạn và hỗ trợ tải thêm
-        function displayProducts(products, reset = false) {
+        // Display Product Card
+        function displayProducts(products) {
             const productListElement = document.getElementById('productList');
-            if (reset) {
-                productListElement.innerHTML = ''; // Nếu reset là true, xóa danh sách sản phẩm hiện tại
-                currentProductIndex = 0;
-            }
+            productListElement.innerHTML = ''; // Clear current products
 
-            // Tính toán số lượng sản phẩm còn lại có thể hiển thị
-            const remainingProducts = products.length - currentProductIndex;
-            const count = Math.min(productsPerPage, remainingProducts);
-
-            for (let i = 0; i < count; i++) {
-                const product = products[currentProductIndex + i];
+            products.forEach(product => {
                 const productHTML = `
-            <div class="col">
-                <article class="product-card">
+                    <div class="col">
+                        <article class="product-card">
                             <div class="product-card__img-wrap">
                                 <a href="./product-detail.html">
                                     <img src="${product.image_src}" alt="" class="product-card__thumb">
@@ -178,27 +177,14 @@
                                 <span class="product-card__score">${product.ranking}</span>
                             </div>
                         </article>
-            </div>
-        `;
+                    </div>
+                `;
                 productListElement.innerHTML += productHTML;
-            }
-            currentProductIndex += count; // Cập nhật chỉ số sản phẩm cuối cùng được hiển thị
-
-            // Ẩn nút Xem thêm nếu đã hiển thị tất cả sản phẩm
-            if (currentProductIndex >= products.length) {
-                document.getElementById('loadMore').style.display = 'none';
-            } else {
-                document.getElementById('loadMore').style.display = 'inline-block';
-            }
-            attachLikeEventListeners(); // Gắn lại sự kiện cho nút like
+            });
+            attachLikeEventListeners();
         }
 
-        // Hàm xử lý khi nhấn nút Xem thêm
-        function loadMoreProducts() {
-            fetchProducts(); // Gọi lại hàm fetchProducts() hoặc chỉ đơn giản là displayProducts(products) với danh sách sản phẩm hiện có.
-        }
 
-        document.getElementById('loadMore').addEventListener('click', loadMoreProducts);
 
         function attachLikeEventListeners() {
             var likeButtons = document.querySelectorAll(".like-btn.product-card__like-btn");
