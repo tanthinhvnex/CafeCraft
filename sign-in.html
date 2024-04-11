@@ -69,24 +69,13 @@
             <div class="form__group">
               <div class="form__text-input">
                 <input
-                  autofocus
-                  placeholder="Email"
+                  placeholder="Account"
                   class="form__input"
                   required
-                  id="input_email"
-                />
-                <img
-                  src="./assets/icons/message.svg"
-                  alt=""
-                  class="form__input-icon"
-                />
-                <img
-                  src="./assets/icons/form-error.svg"
-                  alt=""
-                  class="form__input-icon-error"
+                  id="input_account"
                 />
               </div>
-              <p class="form__error">Email is not in correct format</p>
+              <p class="form__error">Account must be at least 1 character</p>
             </div>
             <div class="form__group">
               <div class="form__text-input">
@@ -98,33 +87,10 @@
                   minlength="6"
                   id="input_password"
                 />
-                <img
-                  src="./assets/icons/lock.svg"
-                  alt=""
-                  class="form__input-icon"
-                />
-                <img
-                  src="./assets/icons/form-error.svg"
-                  alt=""
-                  class="form__input-icon-error"
-                />
               </div>
               <p class="form__error">Password at least 6 characters</p>
             </div>
             <div class="form__group form__group--inline">
-              <!-- Bỏ đi thuộc tính for của label -->
-              <!-- thì nó sẽ for cho các thẻ con của nó -->
-              <!-- <label class="form__checkbox">
-                                <input
-                                    type="checkbox"
-                                    name=""
-                                    id=""
-                                    class="form__checkbox-input d-none" />
-                                <span class="form__checkbox-label"
-                                    >Set as default card</span
-                                >
-                            </label> -->
-
               <a
                 href="./reset-password.html"
                 class="auth__link form__pull-right"
@@ -133,17 +99,18 @@
             </div>
 
             <div class="form__group auth__btn-group">
-              <button class="btn btn--primary auth__btn form__submit-btn">
-                Login
+              <button
+                class="btn btn--primary auth__btn form__submit-btn"
+                id="signin-btn"
+              >
+                <span id="signin-btn-text">Login</span>
+                <!-- Spinner sẽ ẩn ban đầu -->
+                <span
+                  id="signin-btn-spinner"
+                  class="spinner"
+                  style="display: none"
+                ></span>
               </button>
-              <!-- <button
-                                class="btn btn--outline auth__btn btn--no-margin">
-                                <img
-                                    src="./assets/icons/google.svg"
-                                    alt=""
-                                    class="btn__icon icon" />
-                                Sign in with Google
-                            </button> -->
             </div>
           </form>
 
@@ -158,36 +125,109 @@
     </main>
     <script>
       window.dispatchEvent(new Event("template-loaded"));
-      document
-        .getElementById("signin-form")
-        .addEventListener("submit", function (event) {
-          event.preventDefault();
-          const inputEmail = document
-            .getElementById("input_email")
-            .value.trim();
-          const inputPassword = document
-            .getElementById("input_password")
-            .value.trim();
 
-          const body = {
-            password: inputPassword,
-          };
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("signin-form");
+        const inputAccount = document.getElementById("input_account");
+        const inputPassword = document.getElementById("input_password");
 
-          fetch(`https://be-dacnpm.onrender.com/users/${inputEmail}`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              window.location.href = "/";
-            })
-            .catch((error) => {
-              alert("Sign in failed, please sign in again!");
-            });
+        function displayError(input) {
+          const errorElement =
+            input.parentNode.parentNode.querySelector(".form__error");
+          errorElement.style.display = "block";
+        }
+
+        function hideError(input) {
+          const errorElement =
+            input.parentNode.parentNode.querySelector(".form__error");
+          errorElement.style.display = "none";
+        }
+
+        // When user inputting, hide error
+        function addInputEventListener(input) {
+          input.addEventListener("input", function () {
+            hideError(this);
+          });
+        }
+
+        [inputAccount, inputPassword].forEach(function (input) {
+          addInputEventListener(input);
         });
+
+        inputAccount.addEventListener("blur", function () {
+          if (this.value.trim().length === 0) {
+            displayError(this);
+          } else {
+            hideError(this);
+          }
+        });
+
+        inputPassword.addEventListener("blur", function () {
+          if (this.value.length < 6) {
+            displayError(this);
+          } else {
+            hideError(this);
+          }
+        });
+
+        // If form has error, return false, else return true
+        function validateForm() {
+          let isValid = true;
+          [inputAccount, inputPassword].forEach((input) => {
+            const errorElement =
+              input.parentNode.parentNode.querySelector(".form__error");
+            if (errorElement && errorElement.style.display === "block") {
+              isValid = false;
+            }
+          });
+          return isValid;
+        }
+        form.addEventListener("submit", function (event) {
+          event.preventDefault();
+          const isFormValid = validateForm(); // Validate form
+          if (!isFormValid) {
+            alert("Please correct the errors in the form before submitting.");
+            return;
+          } else {
+            account = inputAccount.value.trim();
+            password = inputPassword.value;
+
+            // Hide login text and show spinner
+            document.getElementById("signin-btn-text").style.display = "none";
+            document.getElementById("signin-btn-spinner").style.display =
+              "inline-block";
+
+            const body = {
+              password: password,
+            };
+
+            fetch(`https://be-dacnpm.onrender.com/users/${account}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(body),
+            })
+              .then((response) => response.json())
+              .then((response) => {
+                // Reset button text and hide spinner
+                document.getElementById("signin-btn-text").style.display =
+                  "inline";
+                document.getElementById("signin-btn-spinner").style.display =
+                  "none";
+                window.location.href = "./index-logined.html";
+              })
+              .catch((error) => {
+                // Reset button text and hide spinner
+                document.getElementById("signin-btn-text").style.display =
+                  "inline";
+                document.getElementById("signin-btn-spinner").style.display =
+                  "none";
+                alert("Sign in failed, please sign in again!");
+              });
+          }
+        });
+      });
     </script>
   </body>
 </html>
