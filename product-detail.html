@@ -384,161 +384,13 @@
               </div>
               <div class="prod-tab__content">
                 <div class="prod-content">
-                  <h2 class="prod-content__heading">
+                  <h2 class="prod-content__heading" id="reviewTitle">
                     What our customers are saying
                   </h2>
-                  <div class="row row-cols-3 gx-lg-2 row-cols-md-1 gy-md-3">
-                    <!-- Review card 1 -->
-                    <div class="col">
-                      <div class="review-card">
-                        <div class="review-card__content">
-                          <img
-                            src="./assets/img/avatar/avatar-1.png"
-                            alt=""
-                            class="review-card__avatar"
-                          />
-                          <div class="review-card__info">
-                            <h4 class="review-card__title">Jakir Hussen</h4>
-                            <p class="review-card__desc">
-                              Great product, I love this Coffee Beans
-                            </p>
-                          </div>
-                        </div>
-                        <div class="review-card__rating">
-                          <div class="review-card__star-list">
-                            <img
-                              src="./assets/icons/star.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                            <img
-                              src="./assets/icons/star.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                            <img
-                              src="./assets/icons/star.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                            <img
-                              src="./assets/icons/star-half.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                            <img
-                              src="./assets/icons/star-blank.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                          </div>
-                          <span class="review-card__rating-title"
-                            >(3.5) Review</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Review card 2 -->
-                    <div class="col">
-                      <div class="review-card">
-                        <div class="review-card__content">
-                          <img
-                            src="./assets/img/avatar/avatar-2.png"
-                            alt=""
-                            class="review-card__avatar"
-                          />
-                          <div class="review-card__info">
-                            <h4 class="review-card__title">Jubed Ahmed</h4>
-                            <p class="review-card__desc">
-                              Awesome Coffee, I love this Coffee Beans
-                            </p>
-                          </div>
-                        </div>
-                        <div class="review-card__rating">
-                          <div class="review-card__star-list">
-                            <img
-                              src="./assets/icons/star.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                            <img
-                              src="./assets/icons/star.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                            <img
-                              src="./assets/icons/star.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                            <img
-                              src="./assets/icons/star-half.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                            <img
-                              src="./assets/icons/star-blank.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                          </div>
-                          <span class="review-card__rating-title"
-                            >(3.5) Review</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                    <!-- Review card 3 -->
-                    <div class="col">
-                      <div class="review-card">
-                        <div class="review-card__content">
-                          <img
-                            src="./assets/img/avatar/avatar-3.png"
-                            alt=""
-                            class="review-card__avatar"
-                          />
-                          <div class="review-card__info">
-                            <h4 class="review-card__title">Delwar Hussain</h4>
-                            <p class="review-card__desc">
-                              Great product, I like this Coffee Beans
-                            </p>
-                          </div>
-                        </div>
-                        <div class="review-card__rating">
-                          <div class="review-card__star-list">
-                            <img
-                              src="./assets/icons/star.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                            <img
-                              src="./assets/icons/star.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                            <img
-                              src="./assets/icons/star.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                            <img
-                              src="./assets/icons/star-half.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                            <img
-                              src="./assets/icons/star-blank.svg"
-                              alt=""
-                              class="review-card__star"
-                            />
-                          </div>
-                          <span class="review-card__rating-title"
-                            >(3.5) Review</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <div
+                    class="row row-cols-3 gx-lg-2 row-cols-md-1 gy-md-3"
+                    id="reviewContainer"
+                  ></div>
                 </div>
               </div>
               <div class="prod-tab__content" id="similarProducts">
@@ -610,11 +462,16 @@
         // Lấy danh sách sản phẩm từ localStorage
         const products = JSON.parse(localStorage.getItem("products")) || [];
 
+        console.log(productId);
+
         // Tìm sản phẩm dựa trên productId
         const product = products.find((p) => p.id.toString() === productId);
 
         if (product) {
           updateProductDetail(product, products);
+
+          // Fetch the reviews
+          fetchReviews();
         } else {
           // Xử lý trường hợp sản phẩm không tìm thấy, ví dụ hiển thị thông báo lỗi
           console.error("Product not found");
@@ -635,6 +492,79 @@
             event.preventDefault(); // Ngăn không cho trình duyệt thực hiện hành vi mặc định
             this.classList.toggle("like-btn--liked"); // Toggle class "like-btn--liked"
           });
+        });
+      }
+
+      async function fetchReviews() {
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get("productId");
+        const container = document.getElementById("reviewContainer");
+
+        if (!container) {
+          return;
+        }
+
+        const response = await fetch(
+          `http://localhost:3000/reviews/${productId}`
+        );
+
+        if (!response.ok) {
+          return;
+        }
+
+        const reviews = await response.json();
+
+        if (reviews.length === 0) {
+          const eleTitle = document.getElementById("reviewTitle");
+          eleTitle.innerHTML =
+            "This product has no reviews yet. Be the first one to review it!";
+          return;
+        }
+
+        reviews.forEach((review) => {
+          const ceiledStars = Math.ceil(review.stars);
+          const ele = ` <div class="col">
+                      <div class="review-card">
+                        <div class="review-card__content">
+                          <img
+                            src="${review.user_image}"
+                            alt=""
+                            object-fit="cover"
+                            class="review-card__avatar"
+                          />
+                          <div class="review-card__info">
+                            <h4 class="review-card__title">${
+                              review.user_name
+                            }</h4>
+                            <p class="review-card__desc">
+                              ${review.review_content}
+                            </p>
+                          </div>
+                        </div>
+                        <div class="review-card__rating">
+                          <div class="review-card__star-list">
+                            ${Array(5)
+                              .fill()
+                              .map(
+                                (_, index) =>
+                                  `<img src="./assets/icons/${
+                                    index < ceiledStars
+                                      ? "star"
+                                      : index < review.stars
+                                      ? "star-half"
+                                      : "star-blank"
+                                  }.svg" alt="" class="review-card__star">`
+                              )
+                              .join("")}
+                          </div>
+                          <span class="review-card__rating-title"
+                            >(${ceiledStars}) Review</span
+                          >
+                        </div>
+                      </div>
+                    </div>`;
+
+          container.innerHTML += ele;
         });
       }
 
