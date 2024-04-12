@@ -160,7 +160,7 @@
                         password: password,
                     };
 
-                    fetch(`https://be-dacnpm.onrender.com/users/${inputEmail}`, {
+                    fetch(`https://be-dacnpm.onrender.com/users/${account}`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -168,13 +168,25 @@
                         body: JSON.stringify(body),
                     })
                         .then((response) => response.json())
-                        .then((data) => {
-                            window.location.href = "/";
+                        .then((response) => {
+                            // Reset button text and hide spinner
+                            document.getElementById("signin-btn-text").style.display =
+                                "inline";
+                            document.getElementById("signin-btn-spinner").style.display =
+                                "none";
+                            window.location.href = "./";
                         })
                         .catch((error) => {
+                            // Reset button text and hide spinner
+                            document.getElementById("signin-btn-text").style.display =
+                                "inline";
+                            document.getElementById("signin-btn-spinner").style.display =
+                                "none";
                             alert("Sign in failed, please sign in again!");
                         });
-                });
+                }
+            });
+        });
     </script>
 </body>
 

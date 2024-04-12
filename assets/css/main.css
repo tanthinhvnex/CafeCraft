@@ -2494,7 +2494,7 @@ html {
 }
 
 .product-card {
-  min-height: 386px;
+  /* min-height: 386px; */
   padding: 16px;
   border-radius: 20px;
   background: var(--product-card-bg);
@@ -3926,7 +3926,7 @@ html {
   margin-top: 30px;
 }
 .prod-prop__icon {
-  align-self: flex-start;
+  /* align-self: flex-start; */
 }
 .prod-prop__title {
   font-size: 1.8rem;
@@ -4020,6 +4020,7 @@ html {
 }
 .prod-tab__content--current {
   display: block;
+  width: 100%;
 }
 
 .prod-content {
@@ -4620,7 +4621,7 @@ html {
   justify-content: flex-end;
 }
 
-/*# sourceMappingURL=main.css.map */
+
 .loading-spinner {
   text-align: center;
   padding: 20px;

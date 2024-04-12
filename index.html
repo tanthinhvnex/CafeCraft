@@ -53,38 +53,30 @@
         </div>
 
         <!-- Top Product -->
-        <div class="home__container">
+        <section class="home__container">
             <div class="home__row">
-                <div class="home__heading">Top Product</div>
+                <h2 class="home__heading">Top Product</h2>
             </div>
+            <div style="display: flex; justify-content: center;">
+                <div id="topProductLoader" class="loading-spinner"></div>
+            </div>
+
+
             <div class="home__cate row row-cols-3 row-cols-md-1">
-                <!-- Category item 1 -->
-                <div class="col">
-                    <a href="#!">
-                        <article class="cate-item">
-                            <img src="./assets/img/category-item/item-1.png" alt="" class="cate-item__thumb">
-                            <div class="cate-item__info">
-                                <h3 class="cate-item__title">$24 - $150</h3>
-                                <p class="cate-item__desc">
-                                    New sumatra mandeling coffe blend
-                                </p>
-                            </div>
-                        </article>
-                    </a>
-                </div>
             </div>
-        </div>
+        </section>
 
         <!-- Product -->
         <section class="home__container">
             <div class="home__row">
                 <h2 class="home__heading">Product</h2>
-                <div id="loadingSpinner" class="loading-spinner">
-                </div>
                 <div id="filter"></div>
                 <script>
                     load("#filter", "./templates/filter.html");
                 </script>
+            </div>
+            <div style="display: flex; justify-content: center;">
+                <div id="productLoader" class="loading-spinner"></div>
             </div>
 
             <div id="productList" class="row row-cols-5 row-cols-lg-2 row-cols-sm-1 g-3">
@@ -99,23 +91,25 @@
         async function fetchProducts() {
             try {
                 // Hiển thị spinner
-                document.getElementById('loadingSpinner').style.display = 'block';
-
+                document.getElementById('topProductLoader').style.display = 'inline-block';
+                document.getElementById('productLoader').style.display = 'inline-block';
                 const response = await fetch('https://be-dacnpm.onrender.com/products');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const products = await response.json();
 
-                // Ẩn spinner khi dữ liệu đã tải xong
-                document.getElementById('loadingSpinner').style.display = 'none';
+                // Lưu vào localStorage
+                localStorage.setItem('products', JSON.stringify(products));
 
                 displayTopRatedProducts(products);
                 displayProducts(products);
             } catch (error) {
                 console.log('Fetch error: ' + error.message);
-                // Ẩn spinner nếu có lỗi
-                document.getElementById('loadingSpinner').style.display = 'none';
+            } finally {
+                // Ẩn spinner khi dữ liệu đã tải xong
+                document.getElementById('topProductLoader').style.display = 'none';
+                document.getElementById('productLoader').style.display = 'none';
             }
         }
 
@@ -133,7 +127,7 @@
             topRatedProducts.forEach(product => {
                 const categoryItemHTML = `
             <div class="col">
-                <a href="./product-detail.html">
+                <a href="./product-detail.html?productId=${product.id}">
                     <article class="cate-item">
                         <img src="${product.image_src}" alt="" class="cate-item__thumb">
                         <div class="cate-item__info">
@@ -160,7 +154,7 @@
                     <div class="col">
                         <article class="product-card">
                             <div class="product-card__img-wrap">
-                                <a href="./product-detail.html">
+                                <a href="./product-detail.html?productId=${product.id}">
                                     <img src="${product.image_src}" alt="" class="product-card__thumb">
                                 </a>
                                 <button class="like-btn product-card__like-btn">
@@ -169,7 +163,7 @@
                                 </button>
                             </div>
                             <h3 class="product-card__title">
-                                <a href="./product-detail.html">${product.name}</a>
+                                <a href="./product-detail.html?productId=${product.id}">${product.name}</a>
                             </h3>
                             <div class="product-card__row">
                                 <span class="product-card__price">$${product.price}</span>
