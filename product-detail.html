@@ -156,7 +156,7 @@
               </div>
             </div>
             <div class="col-7 col-xl-6 col-lg-12">
-              <form action="" class="form">
+              <form action="#" class="form">
                 <section class="prod-info">
                   <h1 class="prod-info__heading">
                     Coffee Beans - Espresso Arabica and Robusta Beans
@@ -182,11 +182,12 @@
                             class="filter__form-text-input filter__form-text-input--small"
                           >
                             <input
-                              type="text"
-                              name=""
-                              id=""
+                              type="number"
                               class="filter__form-input filter__form-input--fsize"
-                              value="1"
+                              id="inputNumberProduct"
+                              placeholder="1"
+                              min="1"
+                              required
                             />
                           </div>
                         </div>
@@ -275,6 +276,8 @@
                           <div class="prod-info__row">
                             <button
                               class="btn btn--primary prod-info__add-to-cart"
+                              onclick="addProductToCart()"
+                              type="button"
                             >
                               Add to cart
                             </button>
@@ -283,11 +286,6 @@
                                 src="./assets/icons/heart.svg"
                                 alt=""
                                 class="like-btn__icon icon"
-                              />
-                              <img
-                                src="./assets/icons/heart-red.svg"
-                                alt=""
-                                class="like-btn__icon--liked"
                               />
                             </button>
                           </div>
@@ -461,8 +459,6 @@
 
         // Lấy danh sách sản phẩm từ localStorage
         const products = JSON.parse(localStorage.getItem("products")) || [];
-
-        console.log(productId);
 
         // Tìm sản phẩm dựa trên productId
         const product = products.find((p) => p.id.toString() === productId);
@@ -690,6 +686,62 @@
             mainImages[index].style.display = "block";
           });
         });
+      }
+
+      function addProductToCart() {
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get("productId");
+
+        const inputNumberProduct =
+          document.getElementById("inputNumberProduct");
+        const selectedSize = document.querySelector(
+          'input[name="size"]:checked'
+        );
+
+        const products = JSON.parse(localStorage.getItem("products")) || [];
+        const product = products.find((p) => p.id.toString() === productId);
+
+        if (!selectedSize) {
+          alert("Please select a size");
+          return;
+        }
+
+        const size = selectedSize.value;
+        const inputNumberValue = inputNumberProduct.value;
+        const quantity = parseInt(inputNumberValue);
+
+        try {
+          const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+          let isExisted = false;
+          cart.forEach((item) => {
+            if (item.id === product.id && item.size === size) {
+              item.quantity = quantity;
+              isExisted = true;
+            }
+          });
+
+          if (!isExisted) {
+            cart.push({
+              id: product ? product.id : 1,
+              size,
+              quantity: quantity || 1,
+              price: product
+                ? product.price - product.price * (product.discount / 100)
+                : 500,
+              name: product ? product.name : "Aura Almond Joy",
+              image_src: product
+                ? product.image_src
+                : "https://trungnguyenecoffee.com/wp-content/uploads/2021/07/ST8-250g.jpg",
+            });
+          }
+
+          localStorage.setItem("cart", JSON.stringify(cart));
+
+          console.log(JSON.parse(localStorage.getItem("cart")));
+        } catch (e) {
+          console.error(e);
+        }
       }
     </script>
 
