@@ -64,6 +64,7 @@
 
         productsInCart.forEach((product) => {
           const totalPrice = product.price * product.quantity;
+          const key = `${product.id}-${product.size}`;
 
           const ele = ` <article class="cart-item">
                                     <a href="./product-detail.html">
@@ -77,14 +78,14 @@
                                                 </a>
                                             </h3>
                                             <p class="cart-item__price-wrap">
-                                                $${product.price} | <span class="cart-item__status">In Stock</span>
+                                                $${product.price} | <span class="cart-item__status">${product.size}</span>
                                             </p>
                                             <div class="cart-item__ctrl cart-item__ctrl--md-block">
                                                 <div class="cart-item__input">
                                                     <button type="button" class="cart-item__input-btn" onClick="updateQuantity(${product.id}, false)">
                                                         <img class="icon" src="./assets/icons/minus.svg" alt="" />
                                                     </button>
-                                                    <span id="productQuantityText-${product.id}">${product.quantity}</span>
+                                                    <span id="productQuantityText-${key}">${product.quantity}</span>
                                                     <button type="button" class="cart-item__input-btn" onClick="updateQuantity(${product.id}, true)">
                                                         <img class="icon" src="./assets/icons/plus.svg" alt="" />
                                                     </button>
@@ -92,7 +93,7 @@
                                             </div>
                                         </div>
                                         <div class="cart-item__content-right">
-                                            <p class="cart-item__total-price" id="${product.id}-totalPrice">$${totalPrice}</p>
+                                            <p class="cart-item__total-price" id="${key}-totalPrice">$${totalPrice}</p>
                                             <div class="cart-item__ctrl">
                                                 <button class="cart-item__ctrl-btn">
                                                     <img src="./assets/icons/heart-2.svg" alt="" />
@@ -114,18 +115,15 @@
       }
 
       function updateQuantity(productId, isIncrease) {
-        console.log("id: ", productId);
-
-        const ele = document.getElementById(`productQuantityText-${productId}`);
-        const eleTotalPrice = document.getElementById(
-          `${productId}-totalPrice`
-        );
-
         const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
         const product = productsInCart.find((p) => p.id === productId);
         if (!product) {
           return;
         }
+
+        const key = `${product.id}-${product.size}`;
+        const ele = document.getElementById(`productQuantityText-${key}`);
+        const eleTotalPrice = document.getElementById(`${key}-totalPrice`);
 
         product.quantity += isIncrease ? 1 : -1;
 
