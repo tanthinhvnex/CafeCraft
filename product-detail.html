@@ -218,7 +218,7 @@
                                 name="size"
                                 id="medium"
                               />
-                              Medium (1000g)
+                              Medium (1000g) ($10)
                             </label>
                           </div>
                           <div class="form__tag prod-info__tag">
@@ -229,7 +229,7 @@
                                 name="size"
                                 id="large"
                               />
-                              Large (2000g)
+                              Large (2000g) ($20)
                             </label>
                           </div>
                         </div>
@@ -739,6 +739,12 @@
           localStorage.setItem("cart", JSON.stringify(cart));
 
           console.log(JSON.parse(localStorage.getItem("cart")));
+
+          alert(
+            isExisted
+              ? "Update product in card successfully!"
+              : "Product added to cart successfully!"
+          );
         } catch (e) {
           console.error(e);
         }

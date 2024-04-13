@@ -63,8 +63,15 @@
         }
 
         productsInCart.forEach((product) => {
-          const totalPrice = product.price * product.quantity;
+          const totalPrice =
+            (product.price + getExtraPrice(product.size)) * product.quantity;
           const key = `${product.id}-${product.size}`;
+          const textSize =
+            product.size === "small"
+              ? "Small (500g)"
+              : product.size === "medium"
+              ? "Medium (1000g) (+10$)"
+              : "Large (2000g) (+20$)";
 
           const ele = ` <article class="cart-item">
                                     <a href="./product-detail.html">
@@ -78,7 +85,7 @@
                                                 </a>
                                             </h3>
                                             <p class="cart-item__price-wrap">
-                                                $${product.price} | <span class="cart-item__status">${product.size}</span>
+                                                $${product.price} | <span class="cart-item__status">${textSize} </span>
                                             </p>
                                             <div class="cart-item__ctrl cart-item__ctrl--md-block">
                                                 <div class="cart-item__input">
@@ -137,7 +144,9 @@
         }
 
         if (eleTotalPrice) {
-          eleTotalPrice.innerHTML = `$${product.price * product.quantity}`;
+          eleTotalPrice.innerHTML = `$${
+            (product.price + getExtraPrice(product.size)) * product.quantity
+          }`;
         }
 
         localStorage.setItem("cart", JSON.stringify(productsInCart));
@@ -166,11 +175,17 @@
         loadCard();
       }
 
+      function getExtraPrice(size) {
+        return size === "small" ? 0 : size === "medium" ? 10 : 20;
+      }
+
       function reloadCart() {
         const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
 
         const totalPrice = productsInCart.reduce(
-          (acc, product) => acc + product.price * product.quantity,
+          (acc, product) =>
+            acc +
+            (product.price + getExtraPrice(product.size)) * product.quantity,
           0
         );
         const shippingCost = productsInCart.length > 0 ? 10 : 0;
