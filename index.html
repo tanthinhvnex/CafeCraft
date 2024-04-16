@@ -89,28 +89,29 @@
     async function fetchProducts() {
       try {
         // Hiển thị spinner
-        document.getElementById('topProductLoader').style.display = 'inline-block';
-        document.getElementById('productLoader').style.display = 'inline-block';
-        const response = await fetch('https://be-dacnpm.onrender.com/products');
+        document.getElementById("topProductLoader").style.display =
+          "inline-block";
+        document.getElementById("productLoader").style.display =
+          "inline-block";
+        const response = await fetch("http://localhost:3000/products");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const products = await response.json();
 
         // Lưu vào localStorage
-        localStorage.setItem('products', JSON.stringify(products));
+        localStorage.setItem("products", JSON.stringify(products));
 
         displayTopRatedProducts(products);
         displayProducts(products);
       } catch (error) {
-        console.log('Fetch error: ' + error.message);
+        console.log("Fetch error: " + error.message);
       } finally {
         // Ẩn spinner khi dữ liệu đã tải xong
-        document.getElementById('topProductLoader').style.display = 'none';
-        document.getElementById('productLoader').style.display = 'none';
+        document.getElementById("topProductLoader").style.display = "none";
+        document.getElementById("productLoader").style.display = "none";
       }
     }
-      }
 
     function displayTopRatedProducts(products) {
       // Sắp xếp sản phẩm theo rating từ cao xuống thấp
