@@ -27,9 +27,31 @@
 <body>
   <!-- Header -->
   <header id="header" class="header"></header>
+  <!-- Header -->
+  <header id="header" class="header"></header>
   <script>
-    load("#header", "./templates/header-logined.html");
+    // userRole gồm 3 giá trị: guest (chưa đăng nhập), user (đã đăng nhập), admin (đã đăng nhập)
+    var userRole;
+    // Lấy thông tin từ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    // Kiểm tra nếu URL chứa thông tin userRole
+    // Kiểm tra nếu URL chứa thông tin userRole
+    if (urlParams.has("userRole")) {
+      // Lấy giá trị của userRole từ URL
+      userRole = urlParams.get("userRole");
+    } else {
+      // Mặc định là guest nếu không có userRole trong URL
+      userRole = "guest";
+    }
+    console.log(userRole);
+    // Kiểm tra trạng thái đăng nhập và tải template header tương ứng
+    if (userRole == "user") {
+      load("#header", "./templates/header-logined.html");
+    } else {
+      load("#header", "./templates/header.html");
+    }
   </script>
+
 
   <!-- MAIN -->
   <main class="product-page">
@@ -179,6 +201,7 @@
                           </button>
                           <button class="like-btn prod-info__like-btn">
                             <img src="./assets/icons/heart.svg" alt="" class="like-btn__icon icon" />
+                            <img src="./assets/icons/heart-red.svg" alt="" class="like-btn__icon--liked">
                           </button>
                         </div>
                       </div>

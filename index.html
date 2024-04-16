@@ -28,7 +28,25 @@
   <!-- Header -->
   <header id="header" class="header"></header>
   <script>
-    load("#header", "./templates/header.html");
+    // userRole gồm 3 giá trị: guest (chưa đăng nhập), user (đã đăng nhập), admin (đã đăng nhập)
+    var userRole;
+    // Lấy thông tin từ URL
+    const urlParams = new URLSearchParams(window.location.search);
+    // Kiểm tra nếu URL chứa thông tin userRole
+    if (urlParams.has("userRole")) {
+      // Lấy giá trị của userRole từ URL
+      const userRoleFromURL = urlParams.get("userRole");
+      // Cập nhật biến userRole tương ứng
+      userRole = userRoleFromURL;
+    }
+
+    // Kiểm tra trạng thái đăng nhập và tải template header tương ứng
+    if (userRole == "user") {
+      load("#header", "./templates/header-logined.html");
+    } else {
+      load("#header", "./templates/header.html");
+    }
+
   </script>
 
   <div class="container home">
@@ -124,21 +142,21 @@
 
       topRatedProducts.forEach((product) => {
         const categoryItemHTML = `
-            <div class="col">
-                <a href="./product-detail.html?productId=${product.id}">
-                <a href="./product-detail.html?productId=${product.id}">
-                    <article class="cate-item">
-                        <img src="${product.image_src}" alt="" class="cate-item__thumb">
-                        <div class="cate-item__info">
-                            <h3 class="cate-item__title">$${product.price}</h3>
-                            <p class="cate-item__desc">
-                                ${product.name}
-                            </p>
-                        </div>
-                    </article>
-                </a>
-            </div>
-        `;
+              <div class="col">
+                  <a href="./product-detail.html?productId=${product.id}&userRole=${userRole}">
+                  <a href="./product-detail.html?productId=${product.id}&userRole=${userRole}">
+                      <article class="cate-item">
+                          <img src="${product.image_src}" alt="" class="cate-item__thumb">
+                          <div class="cate-item__info">
+                              <h3 class="cate-item__title">$${product.price}</h3>
+                              <p class="cate-item__desc">
+                                  ${product.name}
+                              </p>
+                          </div>
+                      </article>
+                  </a>
+              </div>
+          `;
         categoryListElement.innerHTML += categoryItemHTML;
       });
     }
@@ -150,30 +168,30 @@
 
       products.forEach((product) => {
         const productHTML = `
-                    <div class="col">
-                        <article class="product-card">
-                            <div class="product-card__img-wrap">
-                                <a href="./product-detail.html?productId=${product.id}">
-                                <a href="./product-detail.html?productId=${product.id}">
-                                    <img src="${product.image_src}" alt="" class="product-card__thumb">
-                                </a>
-                                <button class="like-btn product-card__like-btn">
-                                    <img src="./assets/icons/heart.svg" alt="" class="like-btn__icon icon">
-                                    <img src="./assets/icons/heart-red.svg" alt="" class="like-btn__icon--liked">
-                                </button>
-                            </div>
-                            <h3 class="product-card__title">
-                                <a href="./product-detail.html?productId=${product.id}">${product.name}</a>
-                                <a href="./product-detail.html?productId=${product.id}">${product.name}</a>
-                            </h3>
-                            <div class="product-card__row">
-                                <span class="product-card__price">$${product.price}</span>
-                                <img src="./assets/icons/star.svg" alt="" class="product-card__star">
-                                <span class="product-card__score">${product.ranking}</span>
-                            </div>
-                        </article>
-                    </div>
-                `;
+                      <div class="col">
+                          <article class="product-card">
+                              <div class="product-card__img-wrap">
+                                  <a href="./product-detail.html?productId=${product.id}&userRole=${userRole}">
+                                  <a href="./product-detail.html?productId=${product.id}&userRole=${userRole}">
+                                      <img src="${product.image_src}" alt="" class="product-card__thumb">
+                                  </a>
+                                  <button class="like-btn product-card__like-btn">
+                                      <img src="./assets/icons/heart.svg" alt="" class="like-btn__icon icon">
+                                      <img src="./assets/icons/heart-red.svg" alt="" class="like-btn__icon--liked">
+                                  </button>
+                              </div>
+                              <h3 class="product-card__title">
+                                  <a href="./product-detail.html?productId=${product.id}&userRole=${userRole}">${product.name}</a>
+                                  <a href="./product-detail.html?productId=${product.id}&userRole=${userRole}">${product.name}</a>
+                              </h3>
+                              <div class="product-card__row">
+                                  <span class="product-card__price">$${product.price}</span>
+                                  <img src="./assets/icons/star.svg" alt="" class="product-card__star">
+                                  <span class="product-card__score">${product.ranking}</span>
+                              </div>
+                          </article>
+                      </div>
+                  `;
         productListElement.innerHTML += productHTML;
       });
       attachLikeEventListeners();
