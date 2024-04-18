@@ -90,10 +90,49 @@
         const cardDetails = document.getElementById("userCardDetails").value;
         const cardExpire = document.getElementById("userCardExpire").value;
         const cardCVC = document.getElementById("userCardCVC").value;
+        const user = JSON.parse(localStorage.getItem("user")) || undefined;
 
         if (email && cardHolder && cardDetails && cardExpire && cardCVC) {
           // All inputs have been filled
           // Proceed with payment logic here
+
+          const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
+          const total_price = productsInCart.reduce(
+            (acc, product) =>
+              acc +
+              (product.price + getExtraPrice(product.size)) * product.quantity,
+            0
+          );
+
+          const id_products = productsInCart.flatMap((product) => {
+            return Array.from({ length: product.quantity }, () => product.id);
+          });
+          const product_prices = productsInCart.flatMap((product) => {
+            return Array.from(
+              { length: product.quantity },
+              () => product.price + getExtraPrice(product.size)
+            );
+          });
+
+          const body = {
+            id_user: user ? user.id_user : null,
+            id_products,
+            product_prices,
+            total_price,
+            delivery_to: user ? user.address : null,
+          };
+
+          fetch("http://localhost:3000/bills", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(body),
+          })
+            .then((response) => response.json())
+            .then((response) => {
+              console.log(response);
+            });
 
           window.alert("Payment successful!");
           localStorage.removeItem("cart");

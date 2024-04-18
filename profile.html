@@ -341,13 +341,14 @@
     <!-- Footer -->
     <footer id="footer" class="footer"></footer>
     <script>
-      const userId = "f5463482-58f7-4ee3-9178-ba053227a1a4";
-
       fetchUserInformation();
       fetchUserPaymentInformation();
       fetchHistory();
 
       async function fetchUserInformation() {
+        const user = JSON.parse(localStorage.getItem("user")) || undefined;
+        const userId = user ? user.id_user : " ";
+
         const response = await fetch(
           `http://localhost:3000/user-info/${userId}`
         );
@@ -367,6 +368,9 @@
       }
 
       async function fetchUserPaymentInformation() {
+        const user = JSON.parse(localStorage.getItem("user")) || undefined;
+        const userId = user ? user.id_user : " ";
+
         const response = await fetch(
           `http://localhost:3000/payment-info/${userId}`
         );
@@ -427,6 +431,9 @@
       }
 
       async function fetchHistory() {
+        const user = JSON.parse(localStorage.getItem("user")) || undefined;
+        const userId = user ? user.id_user : " ";
+
         const response = await fetch(`http://localhost:3000/bills/${userId}`);
         const data = await response.json();
 
