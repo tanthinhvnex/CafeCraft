@@ -210,6 +210,9 @@
             })
               .then((response) => response.json())
               .then((response) => {
+                // Store the user information in local storage
+                localStorage.setItem("user", JSON.stringify(response));
+
                 // Reset button text and hide spinner
                 document.getElementById("signin-btn-text").style.display =
                   "inline";
