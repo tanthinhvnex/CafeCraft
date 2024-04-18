@@ -306,7 +306,7 @@
               <li class="prod-tab__item prod-tab__item--current">
                 Description
               </li>
-              <li class="prod-tab__item">Review (1100)</li>
+              <li class="prod-tab__item" id="reviewCount">Review (1100)</li>
               <li class="prod-tab__item">Similar</li>
             </ul>
 
@@ -509,6 +509,10 @@
         }
 
         const reviews = await response.json();
+
+        document.getElementById(
+          "reviewCount"
+        ).innerText = `Review (${reviews.length})`;
 
         if (reviews.length === 0) {
           const eleTitle = document.getElementById("reviewTitle");
