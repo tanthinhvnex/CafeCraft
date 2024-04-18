@@ -424,17 +424,17 @@
 
         const container = document.getElementById("history");
         const containerTitle = document.getElementById("historyTitle");
-        const totalPrice =
-          data.reduce((acc, cur) => acc + cur.total_price, 0) * 1000;
-        const formattedTotalPrice = totalPrice
-          .toString()
-          .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        const totalPrice = data.reduce((acc, cur) => acc + cur.total_price, 0);
+        const totalBills = data.reduce((count, obj) => {
+          // If obj.total_price is truthy, increment count by 1
+          return count + (obj.total_price ? 1 : 0);
+        }, 0);
 
         containerTitle.innerHTML =
-          data.length > 0
-            ? `${data.length} ${
-                data.length > 1 ? "bills" : "bill"
-              } - Total: ${formattedTotalPrice} VND`
+          totalBills > 0
+            ? `${totalBills} ${
+                totalBills > 1 ? "bills" : "bill"
+              } - Total: $${totalPrice}`
             : "You haven't bought anything yet!";
         data.forEach((obj, index) => {
           const date = new Date(obj.created_at);
