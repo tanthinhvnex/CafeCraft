@@ -1,79 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Checkout | Grocery Mart</title>
 
-    <!-- Favicon -->
-    <link
-      rel="apple-touch-icon"
-      sizes="76x76"
-      href="./assets/favicon/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./assets/favicon/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="./assets/favicon/favicon-16x16.png"
-    />
-    <link rel="manifest" href="./assets/favicon/site.webmanifest" />
-    <meta name="msapplication-TileColor" content="#da532c" />
-    <meta name="theme-color" content="#ffffff" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout | Grocery Mart</title>
 
-    <!-- Fonts -->
-    <link rel="stylesheet" href="./assets/fonts/stylesheet.css" />
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="76x76" href="./assets/favicon/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png" />
+  <link rel="manifest" href="./assets/favicon/site.webmanifest" />
+  <meta name="msapplication-TileColor" content="#da532c" />
+  <meta name="theme-color" content="#ffffff" />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="./assets/css/main.css" />
+  <!-- Fonts -->
+  <link rel="stylesheet" href="./assets/fonts/stylesheet.css" />
 
-    <!-- Scripts -->
-    <script src="./assets/js/scripts.js"></script>
-  </head>
+  <!-- Styles -->
+  <link rel="stylesheet" href="./assets/css/main.css" />
 
-  <body>
-    <!-- Header -->
-    <header id="header" class="header"></header>
-    <script>
-      load("#header", "./templates/header-logined.html");
+  <!-- Scripts -->
+  <script src="./assets/js/scripts.js"></script>
+</head>
 
-      document.addEventListener("DOMContentLoaded", function () {
-        loadCard();
-      });
+<body>
+  <!-- Header -->
+  <header id="header" class="header"></header>
+  <script>
+    load("#header", "./templates/header-logined.html");
 
-      function loadCard() {
-        const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
-        const container = document.getElementById("cardContainer");
+    document.addEventListener("DOMContentLoaded", function () {
+      loadCard();
+      updateCartNotification()
+    });
 
-        if (!container) {
-          return;
-        }
+    function loadCard() {
+      const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const container = document.getElementById("cardContainer");
 
-        container.innerHTML = "";
+      if (!container) {
+        return;
+      }
 
-        if (productsInCart.length === 0) {
-          clearSession();
-          return;
-        }
+      container.innerHTML = "";
 
-        productsInCart.forEach((product) => {
-          const totalPrice =
-            (product.price + getExtraPrice(product.size)) * product.quantity;
-          const key = `${product.id}-${product.size}`;
-          const textSize =
-            product.size === "small"
-              ? "Small (500g)"
-              : product.size === "medium"
+      if (productsInCart.length === 0) {
+        clearSession();
+        return;
+      }
+
+      productsInCart.forEach((product) => {
+        const totalPrice =
+          (product.price + getExtraPrice(product.size)) * product.quantity;
+        const key = `${product.id}-${product.size}`;
+        const textSize =
+          product.size === "small"
+            ? "Small (500g)"
+            : product.size === "medium"
               ? "Medium (1000g) (+10$)"
               : "Large (2000g) (+20$)";
 
-          const ele = ` <article class="cart-item">
+        const ele = ` <article class="cart-item">
                                     <a href="./product-detail.html">
                                         <img src="${product.image_src}" alt="" class="cart-item__thumb" />
                                     </a>
@@ -111,292 +99,256 @@
                                     </div>
                                 </article>`;
 
-          container.innerHTML += ele;
-        });
+        container.innerHTML += ele;
+      });
 
-        reloadCart();
+      reloadCart();
+    }
+
+    function updateQuantity(productId, isIncrease) {
+      const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const product = productsInCart.find((p) => p.id === productId);
+      if (!product) {
+        return;
       }
 
-      function updateQuantity(productId, isIncrease) {
-        const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
-        const product = productsInCart.find((p) => p.id === productId);
-        if (!product) {
-          return;
-        }
+      const key = `${product.id}-${product.size}`;
+      const ele = document.getElementById(`productQuantityText-${key}`);
+      const eleTotalPrice = document.getElementById(`${key}-totalPrice`);
 
-        const key = `${product.id}-${product.size}`;
-        const ele = document.getElementById(`productQuantityText-${key}`);
-        const eleTotalPrice = document.getElementById(`${key}-totalPrice`);
+      product.quantity += isIncrease ? 1 : -1;
 
-        product.quantity += isIncrease ? 1 : -1;
+      if (product.quantity <= 0) {
+        deleteProduct(productId);
+        return;
+      }
 
-        if (product.quantity <= 0) {
-          deleteProduct(productId);
-          return;
-        }
+      if (ele) {
+        ele.innerHTML = product.quantity;
+      }
 
-        if (ele) {
-          ele.innerHTML = product.quantity;
-        }
-
-        if (eleTotalPrice) {
-          eleTotalPrice.innerHTML = `$${
-            (product.price + getExtraPrice(product.size)) * product.quantity
+      if (eleTotalPrice) {
+        eleTotalPrice.innerHTML = `$${(product.price + getExtraPrice(product.size)) * product.quantity
           }`;
-        }
+      }
 
+      localStorage.setItem("cart", JSON.stringify(productsInCart));
+      reloadCart();
+    }
+
+    function deleteProduct(productID) {
+      const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const productIndex = productsInCart.findIndex(
+        (p) => p.id === productID
+      );
+      if (productIndex === -1) {
+        return;
+      }
+
+      const isLast = productsInCart.length === 1;
+
+      productsInCart.splice(productIndex, 1);
+
+      if (isLast) {
+        clearSession();
+      } else {
         localStorage.setItem("cart", JSON.stringify(productsInCart));
-        reloadCart();
       }
 
-      function deleteProduct(productID) {
-        const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
-        const productIndex = productsInCart.findIndex(
-          (p) => p.id === productID
-        );
-        if (productIndex === -1) {
-          return;
-        }
+      loadCard();
+    }
 
-        const isLast = productsInCart.length === 1;
+    function getExtraPrice(size) {
+      return size === "small" ? 0 : size === "medium" ? 10 : 20;
+    }
 
-        productsInCart.splice(productIndex, 1);
+    function reloadCart() {
+      const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        if (isLast) {
-          clearSession();
-        } else {
-          localStorage.setItem("cart", JSON.stringify(productsInCart));
-        }
+      const totalPrice = productsInCart.reduce(
+        (acc, product) =>
+          acc +
+          (product.price + getExtraPrice(product.size)) * product.quantity,
+        0
+      );
+      const shippingCost = productsInCart.length > 0 ? 10 : 0;
+      const estimatedTotal = totalPrice + shippingCost;
+      const subTotalItems = productsInCart.reduce(
+        (acc, product) => acc + product.quantity,
+        0
+      );
+      const quantity = productsInCart.reduce(
+        (acc, product) => acc + product.quantity,
+        0
+      );
 
-        loadCard();
-      }
+      document.getElementById("productQuantity").innerHTML = quantity;
+      document.getElementById("totalPrice").innerHTML = `$${totalPrice}`;
+      document.getElementById("shippingText").innerHTML = `$${shippingCost}`;
+      document.getElementById(
+        "estimatedTotal"
+      ).innerHTML = `$${estimatedTotal}`;
 
-      function getExtraPrice(size) {
-        return size === "small" ? 0 : size === "medium" ? 10 : 20;
-      }
+      // Bottom
+      document.getElementById("bottomSubTotal").innerHTML = `$${totalPrice}`;
+      document.getElementById(
+        "bottomShippingText"
+      ).innerHTML = `$${shippingCost}`;
+      document.getElementById("bottomTotal").innerHTML = `$${estimatedTotal}`;
+    }
 
-      function reloadCart() {
-        const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
+    function clearSession() {
+      localStorage.removeItem("cart");
 
-        const totalPrice = productsInCart.reduce(
-          (acc, product) =>
-            acc +
-            (product.price + getExtraPrice(product.size)) * product.quantity,
-          0
-        );
-        const shippingCost = productsInCart.length > 0 ? 10 : 0;
-        const estimatedTotal = totalPrice + shippingCost;
-        const subTotalItems = productsInCart.reduce(
-          (acc, product) => acc + product.quantity,
-          0
-        );
-        const quantity = productsInCart.reduce(
-          (acc, product) => acc + product.quantity,
-          0
-        );
+      document.getElementById("shippingText").innerHTML = "$0";
+      document.getElementById("productQuantity").innerHTML = 0;
+      document.getElementById("totalPrice").innerHTML = `$0`;
+      document.getElementById("estimatedTotal").innerHTML = `$0`;
 
-        document.getElementById("productQuantity").innerHTML = quantity;
-        document.getElementById("totalPrice").innerHTML = `$${totalPrice}`;
-        document.getElementById("shippingText").innerHTML = `$${shippingCost}`;
-        document.getElementById(
-          "estimatedTotal"
-        ).innerHTML = `$${estimatedTotal}`;
+      // Bottom
+      document.getElementById("bottomSubTotal").innerHTML = "$0";
+      document.getElementById("bottomTotal").innerHTML = "$0";
+      document.getElementById("bottomShippingText").innerHTML = "$0";
+    }
+  </script>
 
-        // Bottom
-        document.getElementById("bottomSubTotal").innerHTML = `$${totalPrice}`;
-        document.getElementById(
-          "bottomShippingText"
-        ).innerHTML = `$${shippingCost}`;
-        document.getElementById("bottomTotal").innerHTML = `$${estimatedTotal}`;
-      }
-
-      function clearSession() {
-        localStorage.removeItem("cart");
-
-        document.getElementById("shippingText").innerHTML = "$0";
-        document.getElementById("productQuantity").innerHTML = 0;
-        document.getElementById("totalPrice").innerHTML = `$0`;
-        document.getElementById("estimatedTotal").innerHTML = `$0`;
-
-        // Bottom
-        document.getElementById("bottomSubTotal").innerHTML = "$0";
-        document.getElementById("bottomTotal").innerHTML = "$0";
-        document.getElementById("bottomShippingText").innerHTML = "$0";
-      }
-    </script>
-
-    <!-- MAIN -->
-    <main class="checkout-page">
-      <div class="container">
-        <!-- Search bar -->
-        <div class="checkout-container">
-          <div class="search-bar d-none d-md-flex">
-            <input
-              type="text"
-              name=""
-              id=""
-              placeholder="Search for item"
-              class="search-bar__input"
-            />
-            <button class="search-bar__submit">
-              <img
-                src="./assets/icons/search.svg"
-                alt=""
-                class="search-bar__icon icon"
-              />
-            </button>
-          </div>
+  <!-- MAIN -->
+  <main class="checkout-page">
+    <div class="container">
+      <!-- Search bar -->
+      <div class="checkout-container">
+        <div class="search-bar d-none d-md-flex">
+          <input type="text" name="" id="" placeholder="Search for item" class="search-bar__input" />
+          <button class="search-bar__submit">
+            <img src="./assets/icons/search.svg" alt="" class="search-bar__icon icon" />
+          </button>
         </div>
+      </div>
 
-        <!-- Breadcrumbs -->
-        <div class="checkout-container">
-          <ul class="breadcrumbs checkout-page__breadcrumbs">
-            <li>
-              <a href="./" class="breadcrumbs__link">
-                Home
-                <img src="./assets/icons/arrow-right.svg" alt="" />
-              </a>
-            </li>
-            <li>
-              <a href="#!" class="breadcrumbs__link breadcrumbs__link--current"
-                >Checkout</a
-              >
-            </li>
-          </ul>
-        </div>
+      <!-- Breadcrumbs -->
+      <div class="checkout-container">
+        <ul class="breadcrumbs checkout-page__breadcrumbs">
+          <li>
+            <a href="./" class="breadcrumbs__link">
+              Home
+              <img src="./assets/icons/arrow-right.svg" alt="" />
+            </a>
+          </li>
+          <li>
+            <a href="#!" class="breadcrumbs__link breadcrumbs__link--current">Checkout</a>
+          </li>
+        </ul>
+      </div>
 
-        <!-- Checkout content -->
-        <div class="checkout-container">
-          <div class="row gy-xl-3">
-            <div class="col-8 col-xl-12">
-              <div class="cart-info">
-                <div class="cart-info__list" id="cardContainer"></div>
+      <!-- Checkout content -->
+      <div class="checkout-container">
+        <div class="row gy-xl-3">
+          <div class="col-8 col-xl-12">
+            <div class="cart-info">
+              <div class="cart-info__list" id="cardContainer"></div>
 
-                <div class="cart-info__bottom d-md-none">
-                  <div class="row">
-                    <div class="col-8 col-xxl-7">
-                      <div class="cart-info__continue">
-                        <a href="./" class="cart-info__continue-link">
-                          <img
-                            class="cart-info__continue-icon icon"
-                            src="./assets/icons/arrow-down-2.svg"
-                            alt=""
-                          />
-                          Continue Shopping
-                        </a>
-                      </div>
+              <div class="cart-info__bottom d-md-none">
+                <div class="row">
+                  <div class="col-8 col-xxl-7">
+                    <div class="cart-info__continue">
+                      <a href="./" class="cart-info__continue-link">
+                        <img class="cart-info__continue-icon icon" src="./assets/icons/arrow-down-2.svg" alt="" />
+                        Continue Shopping
+                      </a>
                     </div>
-                    <div class="col-4 col-xxl-5">
-                      <div class="cart-info__row">
-                        <span>Subtotal:</span>
-                        <span id="bottomSubTotal">$191.65</span>
-                      </div>
-                      <div class="cart-info__row">
-                        <span>Shipping:</span>
-                        <span id="bottomShippingText">$10.00</span>
-                      </div>
-                      <div class="cart-info__separate"></div>
-                      <div class="cart-info__row cart-info__row--bold">
-                        <span>Total:</span>
-                        <span id="bottomTotal">$201.65</span>
-                      </div>
+                  </div>
+                  <div class="col-4 col-xxl-5">
+                    <div class="cart-info__row">
+                      <span>Subtotal:</span>
+                      <span id="bottomSubTotal">$191.65</span>
+                    </div>
+                    <div class="cart-info__row">
+                      <span>Shipping:</span>
+                      <span id="bottomShippingText">$10.00</span>
+                    </div>
+                    <div class="cart-info__separate"></div>
+                    <div class="cart-info__row cart-info__row--bold">
+                      <span>Total:</span>
+                      <span id="bottomTotal">$201.65</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-4 col-xl-12">
-              <div class="cart-info">
-                <div class="cart-info__row">
-                  <span
-                    >Subtotal
-                    <span class="cart-info__sub-label">(items)</span></span
-                  >
-                  <span id="productQuantity">3</span>
-                </div>
-                <div class="cart-info__row">
-                  <span
-                    >Price
-                    <span class="cart-info__sub-label">(Total)</span></span
-                  >
-                  <span id="totalPrice">$191.65</span>
-                </div>
-                <div class="cart-info__row">
-                  <span>Shipping</span>
-                  <span id="shippingText">$10.00</span>
-                </div>
-                <div class="cart-info__separate"></div>
-                <div class="cart-info__row">
-                  <span>Estimated Total</span>
-                  <span id="estimatedTotal">$201.65</span>
-                </div>
-                <a
-                  href="./shipping.html"
-                  class="cart-info__next-btn btn btn--primary btn--rounded"
-                >
-                  Continue to checkout
-                </a>
+          </div>
+          <div class="col-4 col-xl-12">
+            <div class="cart-info">
+              <div class="cart-info__row">
+                <span>Subtotal
+                  <span class="cart-info__sub-label">(items)</span></span>
+                <span id="productQuantity">3</span>
               </div>
-              <div class="cart-info">
-                <a href="#!">
-                  <article class="gift-item">
-                    <div class="gift-item__icon-wrap">
-                      <img
-                        src="./assets/icons/gift.svg"
-                        alt=""
-                        class="gift-item__icon"
-                      />
-                    </div>
-                    <div class="gift-item__content">
-                      <h3 class="gift-item__title">
-                        Send this order as a gift.
-                      </h3>
-                      <p class="gift-item__desc">
-                        Available items will be shipped to your gift recipient.
-                      </p>
-                    </div>
-                  </article>
-                </a>
+              <div class="cart-info__row">
+                <span>Price
+                  <span class="cart-info__sub-label">(Total)</span></span>
+                <span id="totalPrice">$191.65</span>
               </div>
+              <div class="cart-info__row">
+                <span>Shipping</span>
+                <span id="shippingText">$10.00</span>
+              </div>
+              <div class="cart-info__separate"></div>
+              <div class="cart-info__row">
+                <span>Estimated Total</span>
+                <span id="estimatedTotal">$201.65</span>
+              </div>
+              <a href="./shipping.html" class="cart-info__next-btn btn btn--primary btn--rounded">
+                Continue to checkout
+              </a>
+            </div>
+            <div class="cart-info">
+              <a href="#!">
+                <article class="gift-item">
+                  <div class="gift-item__icon-wrap">
+                    <img src="./assets/icons/gift.svg" alt="" class="gift-item__icon" />
+                  </div>
+                  <div class="gift-item__content">
+                    <h3 class="gift-item__title">
+                      Send this order as a gift.
+                    </h3>
+                    <p class="gift-item__desc">
+                      Available items will be shipped to your gift recipient.
+                    </p>
+                  </div>
+                </article>
+              </a>
             </div>
           </div>
         </div>
       </div>
-    </main>
-
-    <!-- Footer -->
-    <footer id="footer" class="footer"></footer>
-    <script>
-      load("#footer", "./templates/footer.html");
-    </script>
-
-    <!-- Modal: confirm remove shopping cart item -->
-    <div id="delete-confirm" class="modal modal--small hide">
-      <div class="modal__content">
-        <div class="modal__text">
-          Do you want to remove this item from shopping cart
-        </div>
-        <div class="modal__bottom">
-          <button
-            class="btn btn--small btn--outline btn--text modal__btn js-toggle"
-            toggle-target="#delete-confirm"
-            type="button"
-          >
-            Cancel
-          </button>
-          <button
-            class="btn btn--small btn--danger btn--primary modal__btn btn--no-margin js-toggle"
-            toggle-target="#delete-confirm"
-            type="button"
-          >
-            Delete
-          </button>
-        </div>
-      </div>
-      <div
-        class="modal__overlay js-toggle"
-        toggle-target="#delete-confirm"
-      ></div>
     </div>
-  </body>
+  </main>
+
+  <!-- Footer -->
+  <footer id="footer" class="footer"></footer>
+  <script>
+    load("#footer", "./templates/footer.html");
+  </script>
+
+  <!-- Modal: confirm remove shopping cart item -->
+  <div id="delete-confirm" class="modal modal--small hide">
+    <div class="modal__content">
+      <div class="modal__text">
+        Do you want to remove this item from shopping cart
+      </div>
+      <div class="modal__bottom">
+        <button class="btn btn--small btn--outline btn--text modal__btn js-toggle" toggle-target="#delete-confirm"
+          type="button">
+          Cancel
+        </button>
+        <button class="btn btn--small btn--danger btn--primary modal__btn btn--no-margin js-toggle"
+          toggle-target="#delete-confirm" type="button">
+          Delete
+        </button>
+      </div>
+    </div>
+    <div class="modal__overlay js-toggle" toggle-target="#delete-confirm"></div>
+  </div>
+</body>
+
 </html>

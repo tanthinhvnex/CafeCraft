@@ -1789,6 +1789,19 @@ html {
   border-radius: 8px;
   cursor: pointer;
 }
+.top-act__icon-wrap {
+  position: relative;
+}
+.cart-notification {
+  position: absolute;
+  top: -4px;
+  right: -5px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #e65025;
+  font-size: 1.2rem;
+}
 
 .nav-btn {
   height: 50px;
