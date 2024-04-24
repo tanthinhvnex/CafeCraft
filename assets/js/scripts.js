@@ -249,7 +249,6 @@ function checkLogOut() {
 function updateCartNotification() {
     cartNotification = document.querySelector(".cart-notification")
     cart = JSON.parse(localStorage.getItem("cart"))
-    console.log(cart)
     cartNotification.innerHTML = cart.length
     cartPrice = document.querySelector(".cart-price")
     price = 0

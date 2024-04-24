@@ -1793,6 +1793,7 @@ html {
   position: relative;
 }
 .cart-notification {
+  font-weight: 500;
   position: absolute;
   top: -4px;
   right: -5px;
