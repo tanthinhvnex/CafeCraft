@@ -29,6 +29,9 @@
     <header id="header" class="header"></header>
     <script>
         load("#header", "./templates/header-logined.html");
+        document.addEventListener("DOMContentLoaded", function () {
+            updateCartNotification()
+        });
     </script>
 
     <div class="container home">

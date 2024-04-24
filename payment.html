@@ -1,410 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Payment | Grocery Mart</title>
 
-    <!-- Favicon -->
-    <link
-      rel="apple-touch-icon"
-      sizes="76x76"
-      href="./assets/favicon/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./assets/favicon/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="./assets/favicon/favicon-16x16.png"
-    />
-    <link rel="manifest" href="./assets/favicon/site.webmanifest" />
-    <meta name="msapplication-TileColor" content="#da532c" />
-    <meta name="theme-color" content="#ffffff" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment | Grocery Mart</title>
 
-    <!-- Fonts -->
-    <link rel="stylesheet" href="./assets/fonts/stylesheet.css" />
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="76x76" href="./assets/favicon/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png" />
+  <link rel="manifest" href="./assets/favicon/site.webmanifest" />
+  <meta name="msapplication-TileColor" content="#da532c" />
+  <meta name="theme-color" content="#ffffff" />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="./assets/css/main.css" />
+  <!-- Fonts -->
+  <link rel="stylesheet" href="./assets/fonts/stylesheet.css" />
 
-    <!-- Scripts -->
-    <script src="./assets/js/scripts.js"></script>
-  </head>
+  <!-- Styles -->
+  <link rel="stylesheet" href="./assets/css/main.css" />
 
-  <body>
-    <!-- Header -->
-    <header id="header" class="header"></header>
-    <script>
-      load("#header", "./templates/header-logined.html");
+  <!-- Scripts -->
+  <script src="./assets/js/scripts.js"></script>
+</head>
 
-      function getExtraPrice(size) {
-        return size === "small" ? 0 : size === "medium" ? 10 : 20;
+<body>
+  <!-- Header -->
+  <header id="header" class="header"></header>
+  <script>
+    load("#header", "./templates/header-logined.html");
+    updateCartNotification()
+
+    function getExtraPrice(size) {
+      return size === "small" ? 0 : size === "medium" ? 10 : 20;
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const user = JSON.parse(localStorage.getItem("user")) || undefined;
+      if (user) {
+        document.getElementById("userEmail").value = user.email;
+        document.getElementById("userCardHolder").value = user.full_name;
+        document.getElementById("userCardDetails").value = user.card_number;
+        document.getElementById("userCardExpire").value =
+          user.expiration_date;
+        document.getElementById("userCardCVC").value = user.cvv;
       }
 
-      document.addEventListener("DOMContentLoaded", function () {
-        const user = JSON.parse(localStorage.getItem("user")) || undefined;
-        if (user) {
-          document.getElementById("userEmail").value = user.email;
-          document.getElementById("userCardHolder").value = user.full_name;
-          document.getElementById("userCardDetails").value = user.card_number;
-          document.getElementById("userCardExpire").value =
-            user.expiration_date;
-          document.getElementById("userCardCVC").value = user.cvv;
-        }
+      const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const totalPrice = productsInCart.reduce(
+        (acc, product) =>
+          acc +
+          (product.price + getExtraPrice(product.size)) * product.quantity,
+        0
+      );
+      const shippingCost = productsInCart.length > 0 ? 10 : 0;
+      const estimatedTotal = totalPrice + shippingCost;
+
+      document.getElementById("subTotalItemsPayment").textContent =
+        productsInCart.length;
+      document.getElementById(
+        "priceTotalPayment"
+      ).textContent = `$${totalPrice.toFixed(2)}`;
+      document.getElementById(
+        "shippingPricePayment"
+      ).textContent = `$${shippingCost.toFixed(2)}`;
+      document.getElementById(
+        "estimatedTotalPayment"
+      ).textContent = `$${estimatedTotal.toFixed(2)}`;
+      document.getElementById(
+        "buttonPayment"
+      ).textContent = `Pay $${estimatedTotal.toFixed(2)}`;
+    });
+
+    function handlePay() {
+      const email = document.getElementById("userEmail").value;
+      const cardHolder = document.getElementById("userCardHolder").value;
+      const cardDetails = document.getElementById("userCardDetails").value;
+      const cardExpire = document.getElementById("userCardExpire").value;
+      const cardCVC = document.getElementById("userCardCVC").value;
+      const user = JSON.parse(localStorage.getItem("user")) || undefined;
+
+      if (email && cardHolder && cardDetails && cardExpire && cardCVC) {
+        // All inputs have been filled
+        // Proceed with payment logic here
 
         const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
-        const totalPrice = productsInCart.reduce(
+        const total_price = productsInCart.reduce(
           (acc, product) =>
             acc +
             (product.price + getExtraPrice(product.size)) * product.quantity,
           0
         );
-        const shippingCost = productsInCart.length > 0 ? 10 : 0;
-        const estimatedTotal = totalPrice + shippingCost;
 
-        document.getElementById("subTotalItemsPayment").textContent =
-          productsInCart.length;
-        document.getElementById(
-          "priceTotalPayment"
-        ).textContent = `$${totalPrice.toFixed(2)}`;
-        document.getElementById(
-          "shippingPricePayment"
-        ).textContent = `$${shippingCost.toFixed(2)}`;
-        document.getElementById(
-          "estimatedTotalPayment"
-        ).textContent = `$${estimatedTotal.toFixed(2)}`;
-        document.getElementById(
-          "buttonPayment"
-        ).textContent = `Pay $${estimatedTotal.toFixed(2)}`;
-      });
-
-      function handlePay() {
-        const email = document.getElementById("userEmail").value;
-        const cardHolder = document.getElementById("userCardHolder").value;
-        const cardDetails = document.getElementById("userCardDetails").value;
-        const cardExpire = document.getElementById("userCardExpire").value;
-        const cardCVC = document.getElementById("userCardCVC").value;
-        const user = JSON.parse(localStorage.getItem("user")) || undefined;
-
-        if (email && cardHolder && cardDetails && cardExpire && cardCVC) {
-          // All inputs have been filled
-          // Proceed with payment logic here
-
-          const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
-          const total_price = productsInCart.reduce(
-            (acc, product) =>
-              acc +
-              (product.price + getExtraPrice(product.size)) * product.quantity,
-            0
+        const id_products = productsInCart.flatMap((product) => {
+          return Array.from({ length: product.quantity }, () => product.id);
+        });
+        const product_prices = productsInCart.flatMap((product) => {
+          return Array.from(
+            { length: product.quantity },
+            () => product.price + getExtraPrice(product.size)
           );
+        });
 
-          const id_products = productsInCart.flatMap((product) => {
-            return Array.from({ length: product.quantity }, () => product.id);
+        const body = {
+          id_user: user ? user.id_user : null,
+          id_products,
+          product_prices,
+          total_price,
+          delivery_to: user ? user.address : null,
+        };
+
+        fetch("http://localhost:3000/bills", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        })
+          .then((response) => response.json())
+          .then((response) => {
+            console.log(response);
           });
-          const product_prices = productsInCart.flatMap((product) => {
-            return Array.from(
-              { length: product.quantity },
-              () => product.price + getExtraPrice(product.size)
-            );
-          });
 
-          const body = {
-            id_user: user ? user.id_user : null,
-            id_products,
-            product_prices,
-            total_price,
-            delivery_to: user ? user.address : null,
-          };
-
-          fetch("http://localhost:3000/bills", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-          })
-            .then((response) => response.json())
-            .then((response) => {
-              console.log(response);
-            });
-
-          window.alert("Payment successful!");
-          localStorage.removeItem("cart");
-          window.location.href = "./";
-        } else {
-          window.alert("Please fill in all the required fields.");
-        }
+        window.alert("Payment successful!");
+        localStorage.removeItem("cart");
+        window.location.href = "./";
+      } else {
+        window.alert("Please fill in all the required fields.");
       }
-    </script>
+    }
+  </script>
 
-    <!-- MAIN -->
-    <main class="checkout-page">
-      <div class="container">
-        <!-- Search bar -->
-        <div class="checkout-container">
-          <div class="search-bar d-none d-md-flex">
-            <input
-              type="text"
-              name=""
-              id=""
-              placeholder="Search for item"
-              class="search-bar__input"
-            />
-            <button class="search-bar__submit">
-              <img
-                src="./assets/icons/search.svg"
-                alt=""
-                class="search-bar__icon icon"
-              />
-            </button>
-          </div>
+  <!-- MAIN -->
+  <main class="checkout-page">
+    <div class="container">
+      <!-- Search bar -->
+      <div class="checkout-container">
+        <div class="search-bar d-none d-md-flex">
+          <input type="text" name="" id="" placeholder="Search for item" class="search-bar__input" />
+          <button class="search-bar__submit">
+            <img src="./assets/icons/search.svg" alt="" class="search-bar__icon icon" />
+          </button>
         </div>
+      </div>
 
-        <!-- Breadcrumbs -->
-        <div class="checkout-container">
-          <ul class="breadcrumbs checkout-page__breadcrumbs">
-            <li>
-              <a href="./" class="breadcrumbs__link">
-                Home
-                <img src="./assets/icons/arrow-right.svg" alt="" />
-              </a>
-            </li>
-            <li>
-              <a href="./checkout.html" class="breadcrumbs__link">
-                Checkout
-                <img src="./assets/icons/arrow-right.svg" alt="" />
-              </a>
-            </li>
-            <li>
-              <a href="./shipping.html" class="breadcrumbs__link">
-                Shipping
-                <img src="./assets/icons/arrow-right.svg" alt="" />
-              </a>
-            </li>
-            <li>
-              <a href="#!" class="breadcrumbs__link breadcrumbs__link--current"
-                >Payment method</a
-              >
-            </li>
-          </ul>
-        </div>
+      <!-- Breadcrumbs -->
+      <div class="checkout-container">
+        <ul class="breadcrumbs checkout-page__breadcrumbs">
+          <li>
+            <a href="./" class="breadcrumbs__link">
+              Home
+              <img src="./assets/icons/arrow-right.svg" alt="" />
+            </a>
+          </li>
+          <li>
+            <a href="./checkout.html" class="breadcrumbs__link">
+              Checkout
+              <img src="./assets/icons/arrow-right.svg" alt="" />
+            </a>
+          </li>
+          <li>
+            <a href="./shipping.html" class="breadcrumbs__link">
+              Shipping
+              <img src="./assets/icons/arrow-right.svg" alt="" />
+            </a>
+          </li>
+          <li>
+            <a href="#!" class="breadcrumbs__link breadcrumbs__link--current">Payment method</a>
+          </li>
+        </ul>
+      </div>
 
-        <!-- Checkout content -->
-        <div class="checkout-container">
-          <div class="row gy-xl-3">
-            <div class="col-8 col-lg-12">
-              <div class="cart-info">
-                <h2 class="cart-info__heading cart-info__heading--lv2">
-                  Shipping method
-                </h2>
-                <div class="cart-info__separate"></div>
+      <!-- Checkout content -->
+      <div class="checkout-container">
+        <div class="row gy-xl-3">
+          <div class="col-8 col-lg-12">
+            <div class="cart-info">
+              <h2 class="cart-info__heading cart-info__heading--lv2">
+                Shipping method
+              </h2>
+              <div class="cart-info__separate"></div>
 
-                <!-- Payment item 3 -->
-                <label>
-                  <article class="payment-item payment-item--pointer">
-                    <img
-                      src="./assets/img/payment/delivery-1.png"
-                      alt=""
-                      class="payment-item__thumb"
-                    />
-                    <div class="payment-item__content">
-                      <div class="payment-item__info">
-                        <h3 class="payment-item__title">FAST Delivery</h3>
-                        <p class="payment-item__desc payment-item__desc--low">
-                          Delivery: 1-2 days work
-                        </p>
-                      </div>
-                      <span class="cart-info__checkbox payment-item__checkbox">
-                        <input
-                          type="radio"
-                          name="delivery-method"
-                          checked
-                          class="cart-info__checkbox-input payment-item__checkbox-input"
-                        />
-                        <span class="payment-item__cost">$10</span>
-                      </span>
+              <!-- Payment item 3 -->
+              <label>
+                <article class="payment-item payment-item--pointer">
+                  <img src="./assets/img/payment/delivery-1.png" alt="" class="payment-item__thumb" />
+                  <div class="payment-item__content">
+                    <div class="payment-item__info">
+                      <h3 class="payment-item__title">FAST Delivery</h3>
+                      <p class="payment-item__desc payment-item__desc--low">
+                        Delivery: 1-2 days work
+                      </p>
                     </div>
-                  </article>
-                </label>
-              </div>
+                    <span class="cart-info__checkbox payment-item__checkbox">
+                      <input type="radio" name="delivery-method" checked
+                        class="cart-info__checkbox-input payment-item__checkbox-input" />
+                      <span class="payment-item__cost">$10</span>
+                    </span>
+                  </div>
+                </article>
+              </label>
             </div>
-            <div class="col-4 col-lg-12">
-              <div class="cart-info">
-                <h2 class="cart-info__heading cart-info__heading--lv2">
-                  Payment Details
-                </h2>
-                <p class="cart-info__desc">
-                  Complete your purchase item by providing your payment details
-                  order.
-                </p>
-                <form action="" class="form cart-info__form">
+          </div>
+          <div class="col-4 col-lg-12">
+            <div class="cart-info">
+              <h2 class="cart-info__heading cart-info__heading--lv2">
+                Payment Details
+              </h2>
+              <p class="cart-info__desc">
+                Complete your purchase item by providing your payment details
+                order.
+              </p>
+              <form action="" class="form cart-info__form">
+                <div class="form__group">
+                  <label for="email" class="form__label form__label--medium">Email Address</label>
+                  <div class="form__text-input">
+                    <input type="email" name="email" id="userEmail" placeholder="Email" class="form__input" required />
+                    <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error" />
+                  </div>
+                  <p class="form__error">
+                    Password must be at least 6 characters
+                  </p>
+                </div>
+                <div class="form__group">
+                  <label for="card-holder" class="form__label form__label--medium">
+                    Card Holder
+                  </label>
+                  <div class="form__text-input">
+                    <input type="text" name="card-holder" id="userCardHolder" placeholder="Card Holder"
+                      class="form__input" required />
+                    <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error" />
+                  </div>
+                  <p class="form__error">
+                    Password must be at least 6 characters
+                  </p>
+                </div>
+                <div class="form__group">
+                  <label for="card-details" class="form__label form__label--medium">
+                    Card Details
+                  </label>
+                  <div class="form__text-input">
+                    <input type="text" name="card-details" id="userCardDetails" placeholder="Card Details"
+                      class="form__input" required />
+                    <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error" />
+                  </div>
+                  <p class="form__error">
+                    Password must be at least 6 characters
+                  </p>
+                </div>
+                <div class="form__row cart-info__form-row">
                   <div class="form__group">
-                    <label for="email" class="form__label form__label--medium"
-                      >Email Address</label
-                    >
                     <div class="form__text-input">
-                      <input
-                        type="email"
-                        name="email"
-                        id="userEmail"
-                        placeholder="Email"
-                        class="form__input"
-                        required
-                      />
-                      <img
-                        src="./assets/icons/form-error.svg"
-                        alt=""
-                        class="form__input-icon-error"
-                      />
+                      <input type="text" name="card-expire" id="userCardExpire" placeholder="MM/YY" class="form__input"
+                        required />
+                      <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error" />
                     </div>
                     <p class="form__error">
                       Password must be at least 6 characters
                     </p>
                   </div>
                   <div class="form__group">
-                    <label
-                      for="card-holder"
-                      class="form__label form__label--medium"
-                    >
-                      Card Holder
-                    </label>
                     <div class="form__text-input">
-                      <input
-                        type="text"
-                        name="card-holder"
-                        id="userCardHolder"
-                        placeholder="Card Holder"
-                        class="form__input"
-                        required
-                      />
-                      <img
-                        src="./assets/icons/form-error.svg"
-                        alt=""
-                        class="form__input-icon-error"
-                      />
+                      <input type="text" name="card-cvc" id="userCardCVC" placeholder="CVC" class="form__input"
+                        required />
+                      <img src="./assets/icons/form-error.svg" alt="" class="form__input-icon-error" />
                     </div>
                     <p class="form__error">
                       Password must be at least 6 characters
                     </p>
                   </div>
-                  <div class="form__group">
-                    <label
-                      for="card-details"
-                      class="form__label form__label--medium"
-                    >
-                      Card Details
-                    </label>
-                    <div class="form__text-input">
-                      <input
-                        type="text"
-                        name="card-details"
-                        id="userCardDetails"
-                        placeholder="Card Details"
-                        class="form__input"
-                        required
-                      />
-                      <img
-                        src="./assets/icons/form-error.svg"
-                        alt=""
-                        class="form__input-icon-error"
-                      />
-                    </div>
-                    <p class="form__error">
-                      Password must be at least 6 characters
-                    </p>
-                  </div>
-                  <div class="form__row cart-info__form-row">
-                    <div class="form__group">
-                      <div class="form__text-input">
-                        <input
-                          type="text"
-                          name="card-expire"
-                          id="userCardExpire"
-                          placeholder="MM/YY"
-                          class="form__input"
-                          required
-                        />
-                        <img
-                          src="./assets/icons/form-error.svg"
-                          alt=""
-                          class="form__input-icon-error"
-                        />
-                      </div>
-                      <p class="form__error">
-                        Password must be at least 6 characters
-                      </p>
-                    </div>
-                    <div class="form__group">
-                      <div class="form__text-input">
-                        <input
-                          type="text"
-                          name="card-cvc"
-                          id="userCardCVC"
-                          placeholder="CVC"
-                          class="form__input"
-                          required
-                        />
-                        <img
-                          src="./assets/icons/form-error.svg"
-                          alt=""
-                          class="form__input-icon-error"
-                        />
-                      </div>
-                      <p class="form__error">
-                        Password must be at least 6 characters
-                      </p>
-                    </div>
-                  </div>
-                </form>
-                <div class="cart-info__row">
-                  <span
-                    >Subtotal
-                    <span class="cart-info__sub-label">(items)</span></span
-                  >
-                  <span id="subTotalItemsPayment">3</span>
                 </div>
-                <div class="cart-info__row">
-                  <span
-                    >Price
-                    <span class="cart-info__sub-label">(Total)</span></span
-                  >
-                  <span id="priceTotalPayment">$191.65</span>
-                </div>
-                <div class="cart-info__row">
-                  <span>Shipping</span>
-                  <span id="shippingPricePayment">$10.00</span>
-                </div>
-                <div class="cart-info__separate"></div>
-                <div class="cart-info__row">
-                  <span>Estimated Total</span>
-                  <span id="estimatedTotalPayment">$201.65</span>
-                </div>
-                <a
-                  href="#!"
-                  onclick="handlePay()"
-                  class="cart-info__next-btn btn btn--primary btn--rounded"
-                  id="buttonPayment"
-                  >Pay $201.65</a
-                >
+              </form>
+              <div class="cart-info__row">
+                <span>Subtotal
+                  <span class="cart-info__sub-label">(items)</span></span>
+                <span id="subTotalItemsPayment">3</span>
               </div>
+              <div class="cart-info__row">
+                <span>Price
+                  <span class="cart-info__sub-label">(Total)</span></span>
+                <span id="priceTotalPayment">$191.65</span>
+              </div>
+              <div class="cart-info__row">
+                <span>Shipping</span>
+                <span id="shippingPricePayment">$10.00</span>
+              </div>
+              <div class="cart-info__separate"></div>
+              <div class="cart-info__row">
+                <span>Estimated Total</span>
+                <span id="estimatedTotalPayment">$201.65</span>
+              </div>
+              <a href="#!" onclick="handlePay()" class="cart-info__next-btn btn btn--primary btn--rounded"
+                id="buttonPayment">Pay $201.65</a>
             </div>
           </div>
         </div>
       </div>
-    </main>
+    </div>
+  </main>
 
-    <!-- Footer -->
-    <footer id="footer" class="footer"></footer>
-    <script>
-      load("#footer", "./templates/footer.html");
-    </script>
+  <!-- Footer -->
+  <footer id="footer" class="footer"></footer>
+  <script>
+    load("#footer", "./templates/footer.html");
+  </script>
 
-    <script></script>
-  </body>
+  <script></script>
+</body>
+
 </html>

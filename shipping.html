@@ -1,231 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shipping | Grocery Mart</title>
 
-    <!-- Favicon -->
-    <link
-      rel="apple-touch-icon"
-      sizes="76x76"
-      href="./assets/favicon/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./assets/favicon/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="./assets/favicon/favicon-16x16.png"
-    />
-    <link rel="manifest" href="./assets/favicon/site.webmanifest" />
-    <meta name="msapplication-TileColor" content="#da532c" />
-    <meta name="theme-color" content="#ffffff" />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shipping | Grocery Mart</title>
 
-    <!-- Fonts -->
-    <link rel="stylesheet" href="./assets/fonts/stylesheet.css" />
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="76x76" href="./assets/favicon/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png" />
+  <link rel="manifest" href="./assets/favicon/site.webmanifest" />
+  <meta name="msapplication-TileColor" content="#da532c" />
+  <meta name="theme-color" content="#ffffff" />
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="./assets/css/main.css" />
+  <!-- Fonts -->
+  <link rel="stylesheet" href="./assets/fonts/stylesheet.css" />
 
-    <!-- Scripts -->
-    <script src="./assets/js/scripts.js"></script>
-  </head>
+  <!-- Styles -->
+  <link rel="stylesheet" href="./assets/css/main.css" />
 
-  <body>
-    <!-- Header -->
-    <header id="header" class="header"></header>
-    <script>
-      load("#header", "./templates/header-logined.html");
-    </script>
+  <!-- Scripts -->
+  <script src="./assets/js/scripts.js"></script>
+</head>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
+<body>
+  <!-- Header -->
+  <header id="header" class="header"></header>
+  <script>
+    load("#header", "./templates/header-logined.html");
+    updateCartNotification()
+  </script>
 
-        const totalPrice = productsInCart.reduce(
-          (acc, product) =>
-            acc +
-            (product.price + getExtraPrice(product.size)) * product.quantity,
-          0
-        );
-        const shippingCost = productsInCart.length > 0 ? 10 : 0;
-        const estimatedTotal = totalPrice + shippingCost;
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-        document.getElementById("subTotalItems").textContent =
-          productsInCart.length;
-        document.getElementById(
-          "priceTotal"
-        ).textContent = `$${totalPrice.toFixed(2)}`;
-        document.getElementById(
-          "shippingPrice"
-        ).textContent = `$${shippingCost.toFixed(2)}`;
-        document.getElementById(
-          "estimatedTotal"
-        ).textContent = `$${estimatedTotal.toFixed(2)}`;
+      const totalPrice = productsInCart.reduce(
+        (acc, product) =>
+          acc +
+          (product.price + getExtraPrice(product.size)) * product.quantity,
+        0
+      );
+      const shippingCost = productsInCart.length > 0 ? 10 : 0;
+      const estimatedTotal = totalPrice + shippingCost;
 
-        const user = JSON.parse(localStorage.getItem("user")) || undefined;
-        if (user) {
-          document.getElementById("userName").textContent = user.full_name;
-          document.getElementById("userAddress").textContent = user.address;
-        }
-      });
+      document.getElementById("subTotalItems").textContent =
+        productsInCart.length;
+      document.getElementById(
+        "priceTotal"
+      ).textContent = `$${totalPrice.toFixed(2)}`;
+      document.getElementById(
+        "shippingPrice"
+      ).textContent = `$${shippingCost.toFixed(2)}`;
+      document.getElementById(
+        "estimatedTotal"
+      ).textContent = `$${estimatedTotal.toFixed(2)}`;
 
-      function getExtraPrice(size) {
-        return size === "small" ? 0 : size === "medium" ? 10 : 20;
+      const user = JSON.parse(localStorage.getItem("user")) || undefined;
+      if (user) {
+        document.getElementById("userName").textContent = user.full_name;
+        document.getElementById("userAddress").textContent = user.address;
       }
-    </script>
+    });
 
-    <!-- MAIN -->
-    <main class="checkout-page">
-      <div class="container">
-        <!-- Search bar -->
-        <div class="checkout-container">
-          <div class="search-bar d-none d-md-flex">
-            <input
-              type="text"
-              name=""
-              id=""
-              placeholder="Search for item"
-              class="search-bar__input"
-            />
-            <button class="search-bar__submit">
-              <img
-                src="./assets/icons/search.svg"
-                alt=""
-                class="search-bar__icon icon"
-              />
-            </button>
-          </div>
+    function getExtraPrice(size) {
+      return size === "small" ? 0 : size === "medium" ? 10 : 20;
+    }
+  </script>
+
+  <!-- MAIN -->
+  <main class="checkout-page">
+    <div class="container">
+      <!-- Search bar -->
+      <div class="checkout-container">
+        <div class="search-bar d-none d-md-flex">
+          <input type="text" name="" id="" placeholder="Search for item" class="search-bar__input" />
+          <button class="search-bar__submit">
+            <img src="./assets/icons/search.svg" alt="" class="search-bar__icon icon" />
+          </button>
         </div>
+      </div>
 
-        <!-- Breadcrumbs -->
-        <div class="checkout-container">
-          <ul class="breadcrumbs checkout-page__breadcrumbs">
-            <li>
-              <a href="./" class="breadcrumbs__link">
-                Home
-                <img src="./assets/icons/arrow-right.svg" alt="" />
-              </a>
-            </li>
-            <li>
-              <a href="./checkout.html" class="breadcrumbs__link">
-                Checkout
-                <img src="./assets/icons/arrow-right.svg" alt="" />
-              </a>
-            </li>
-            <li>
-              <a href="#!" class="breadcrumbs__link breadcrumbs__link--current"
-                >Shipping</a
-              >
-            </li>
-          </ul>
-        </div>
+      <!-- Breadcrumbs -->
+      <div class="checkout-container">
+        <ul class="breadcrumbs checkout-page__breadcrumbs">
+          <li>
+            <a href="./" class="breadcrumbs__link">
+              Home
+              <img src="./assets/icons/arrow-right.svg" alt="" />
+            </a>
+          </li>
+          <li>
+            <a href="./checkout.html" class="breadcrumbs__link">
+              Checkout
+              <img src="./assets/icons/arrow-right.svg" alt="" />
+            </a>
+          </li>
+          <li>
+            <a href="#!" class="breadcrumbs__link breadcrumbs__link--current">Shipping</a>
+          </li>
+        </ul>
+      </div>
 
-        <!-- Checkout content -->
-        <div class="checkout-container">
-          <div class="row gy-xl-3">
-            <div class="col-8 col-xl-12">
-              <div class="cart-info">
-                <h1 class="cart-info__heading">
-                  FAST shipping, arrives between one and two days.
-                </h1>
+      <!-- Checkout content -->
+      <div class="checkout-container">
+        <div class="row gy-xl-3">
+          <div class="col-8 col-xl-12">
+            <div class="cart-info">
+              <h1 class="cart-info__heading">
+                FAST shipping, arrives between one and two days.
+              </h1>
 
-                <!-- Checkout address -->
-                <div class="user-address">
-                  <div class="user-address__top">
-                    <div>
-                      <p class="user-address__desc">
-                        Where should we deliver your order?
-                      </p>
-                    </div>
+              <!-- Checkout address -->
+              <div class="user-address">
+                <div class="user-address__top">
+                  <div>
+                    <p class="user-address__desc">
+                      Where should we deliver your order?
+                    </p>
                   </div>
-                  <div class="user-address__list">
-                    <!-- Empty message -->
-                    <!-- <p class="user-address__message">
-                                            Not address yet.
-                                            <a class="user-address__link js-toggle" href="#!" toggle-target="#add-new-address">Add a new address</a>
-                                        </p> -->
-
-                    <!-- Address card 1 -->
-                    <article class="address-card">
-                      <div class="address-card__left">
-                        <div class="address-card__choose">
-                          <label class="cart-info__checkbox">
-                            <input
-                              type="radio"
-                              checked="true"
-                              class="cart-info__checkbox-input"
-                            />
-                          </label>
-                        </div>
-                        <div class="address-card__info">
-                          <h3 class="address-card__title" id="userName">
-                            Imran Khan
-                          </h3>
-                          <p class="address-card__desc" id="userAddress">
-                            Museum of Rajas, Sylhet Sadar, Sylhet 3100.
-                          </p>
-                          <ul class="address-card__list">
-                            <li class="address-card__list-item">Shipping</li>
-                            <li class="address-card__list-item">
-                              Delivery by FAST shipping!
-                            </li>
-                          </ul>
-                        </div>
+                </div>
+                <div class="user-address__list">
+                  <article class="address-card">
+                    <div class="address-card__left">
+                      <div class="address-card__choose">
+                        <label class="cart-info__checkbox">
+                          <input type="radio" checked="true" class="cart-info__checkbox-input" />
+                        </label>
                       </div>
-                    </article>
-                  </div>
+                      <div class="address-card__info">
+                        <h3 class="address-card__title" id="userName">
+                          Imran Khan
+                        </h3>
+                        <p class="address-card__desc" id="userAddress">
+                          Museum of Rajas, Sylhet Sadar, Sylhet 3100.
+                        </p>
+                        <ul class="address-card__list">
+                          <li class="address-card__list-item">Shipping</li>
+                          <li class="address-card__list-item">
+                            Delivery by FAST shipping!
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </article>
                 </div>
               </div>
             </div>
-            <div class="col-4 col-xl-12">
-              <div class="cart-info">
-                <div class="cart-info__row">
-                  <span
-                    >Subtotal
-                    <span class="cart-info__sub-label">(items)</span></span
-                  >
-                  <span id="subTotalItems">3</span>
-                </div>
-                <div class="cart-info__row">
-                  <span
-                    >Price
-                    <span class="cart-info__sub-label">(Total)</span></span
-                  >
-                  <span id="priceTotal">$191.65</span>
-                </div>
-                <div class="cart-info__row">
-                  <span>Shipping</span>
-                  <span id="shippingPrice">$10.00</span>
-                </div>
-                <div class="cart-info__separate"></div>
-                <div class="cart-info__row">
-                  <span>Estimated Total</span>
-                  <span id="estimatedTotal">$201.65</span>
-                </div>
-                <a
-                  href="./payment.html"
-                  class="cart-info__next-btn btn btn--primary btn--rounded"
-                >
-                  Continue to checkout
-                </a>
+          </div>
+          <div class="col-4 col-xl-12">
+            <div class="cart-info">
+              <div class="cart-info__row">
+                <span>Subtotal
+                  <span class="cart-info__sub-label">(items)</span></span>
+                <span id="subTotalItems">3</span>
               </div>
+              <div class="cart-info__row">
+                <span>Price
+                  <span class="cart-info__sub-label">(Total)</span></span>
+                <span id="priceTotal">$191.65</span>
+              </div>
+              <div class="cart-info__row">
+                <span>Shipping</span>
+                <span id="shippingPrice">$10.00</span>
+              </div>
+              <div class="cart-info__separate"></div>
+              <div class="cart-info__row">
+                <span>Estimated Total</span>
+                <span id="estimatedTotal">$201.65</span>
+              </div>
+              <a href="./payment.html" class="cart-info__next-btn btn btn--primary btn--rounded">
+                Continue to checkout
+              </a>
             </div>
           </div>
         </div>
       </div>
-    </main>
+    </div>
+  </main>
 
-    <!-- Footer -->
-    <footer id="footer" class="footer"></footer>
-    <script>
-      load("#footer", "./templates/footer.html");
-    </script>
-  </body>
+  <!-- Footer -->
+  <footer id="footer" class="footer"></footer>
+  <script>
+    load("#footer", "./templates/footer.html");
+  </script>
+</body>
+
 </html>

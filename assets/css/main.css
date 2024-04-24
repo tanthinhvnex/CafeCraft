@@ -1789,6 +1789,20 @@ html {
   border-radius: 8px;
   cursor: pointer;
 }
+.top-act__icon-wrap {
+  position: relative;
+}
+.cart-notification {
+  font-weight: 500;
+  position: absolute;
+  top: -4px;
+  right: -5px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #e65025;
+  font-size: 1.2rem;
+}
 
 .nav-btn {
   height: 50px;
@@ -3128,7 +3142,7 @@ html {
 @media (max-width: 767.98px) {
   .breadcrumbs {
     gap: 16px;
-    radius: 20px;
+    border-radius: 20px;
   }
 }
 .breadcrumbs__link {
@@ -3924,9 +3938,6 @@ html {
   display: flex;
   gap: 16px;
   margin-top: 30px;
-}
-.prod-prop__icon {
-  /* align-self: flex-start; */
 }
 .prod-prop__title {
   font-size: 1.8rem;
