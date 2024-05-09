@@ -1,27 +1,26 @@
 console.log("abc");
-document.addEventListener('DOMContentLoaded', function () {
-    const minusButton = document.getElementById('minus');
-    const plusButton = document.getElementById('plus');
-    const valueDisplay = document.getElementById('number');
+document.addEventListener("DOMContentLoaded", function () {
+  const minusButton = document.getElementById("minus");
+  const plusButton = document.getElementById("plus");
+  const valueDisplay = document.getElementById("number");
 
-    function updateValue(isIncrement) {
-        let currentValue = parseInt(valueDisplay.textContent);
+  function updateValue(isIncrement) {
+    let currentValue = parseInt(valueDisplay.textContent);
 
-        if (isIncrement) {
-            currentValue += 1;
-        } else if (currentValue > 0) {
-            currentValue -= 1;
-        }
-
-        valueDisplay.textContent = currentValue;
+    if (isIncrement) {
+      currentValue += 1;
+    } else if (currentValue > 0) {
+      currentValue -= 1;
     }
 
-    plusButton.addEventListener('click', function () {
-        updateValue(true);
-    });
+    valueDisplay.textContent = currentValue;
+  }
 
+  plusButton.addEventListener("click", function () {
+    updateValue(true);
+  });
 
-    minusButton.addEventListener('click', function () {
-        updateValue(false);
-    });
+  minusButton.addEventListener("click", function () {
+    updateValue(false);
+  });
 });
