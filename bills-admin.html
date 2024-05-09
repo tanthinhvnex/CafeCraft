@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bills</title>
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="76x76" href="./assets/favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png" />
+    <link rel="manifest" href="./assets/favicon/site.webmanifest" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="./assets/fonts/stylesheet.css" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="./assets/css/main.css" />
+    <link rel="stylesheet" href="./assets/css/layout/index-admin.css">
+
+    <!-- JS -->
+    <script src="./assets/js/scripts.js"></script>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header id="header" class="header"></header>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const user = localStorage.getItem("user") || undefined;
+            // if (user) {
+            //     load("#header", "./templates/header-logined.html");
+            //     updateCartNotification()
+            // } else {
+            //     load("#header", "./templates/header.html");
+            // }
+            load("#header", "./templates/header-admin.html");
+            updateCartNotification()
+            checkLogOut()
+        });
+    </script>
+    <div class="container" style="overflow-x: auto; margin-top: 40px">
+        <table id="productTable">
+            <tr class="table">
+                <th class="id-column">ID Bill</th>
+                <th class="price-column">Total Price</th>
+                <th class="delivery-column">Delivery To</th>
+                <th class="created-column">Created At</th>
+                <th class="actions-column">Actions</th>
+            </tr>
+        </table>
+        <div style="display: flex; justify-content: center">
+            <div id="tableLoader" class=" loading-spinner"></div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div id="editModal" class="modal-admin hide">
+            <div class="modal-content">
+                <span class="close-btn js-toggle" toggle-target="#editModal">&times;</span>
+                <form id="editProductForm" style="display: flex; flex-direction: column; flex-grow: 1">
+                    <!-- Inside the editProductForm -->
+                    <input type="hidden" id="edit-product-id" name="product-id">
+                    <div class="form__row">
+                        <div class="form__group">
+                            <label for="edit-product-price" class="form__label">Total Price:</label>
+                            <input type="text" id="edit-product-price" class="form__input" value="Sample">
+                        </div>
+
+                    </div>
+
+                    <div class="form__row">
+                        <div class="form__group">
+                            <label for="edit-quantity" class="form__label">Delivery To:</label>
+                            <input type="text" id="edit-quantity" class="form__input" value="Sample">
+                        </div>
+                    </div>
+                    <div class="form__group" style="display: flex; justify-content: right;">
+                        <button type="submit" class="btn btn-primary form__submit-btn js-toggle"
+                            toggle-target="#editModal">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- Delete Product Modal -->
+        <div id="deleteModal" class="modal-admin hide modal-overlay">
+            <div class="modal-content">
+                <div class="confirm-group">
+                    <p>Are you sure you want to delete this bill?</p>
+                    <div class="btn-wrap">
+                        <button id="deleteConfirm" class="js-toggle btn btn-danger"
+                            toggle-target="#deleteModal">Delete</button>
+                        <button class="js-toggle btn btn-secondary btn--no-margin"
+                            toggle-target="#deleteModal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer id="footer" class="footer"></footer>
+    <script>
+        load("#footer", "./templates/footer.html");
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const buttons = document.querySelectorAll('.btn');
+
+            buttons.forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault(); // Ngăn hành vi mặc định
+                });
+            });
+        });
+    </script>
+    <script>
+        fetchUsers();
+        async function fetchUsers() {
+            try {
+                // Fetch data from API
+                document.getElementById("tableLoader").style.display = "block";
+                fetch('http://localhost:3000/bills')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Process the fetched data
+                        const users = data;
+
+                        // Render the users in the table
+                        const tableBody = document.querySelector('#productTable tbody');
+
+                        users.forEach(user => {
+                            const row = document.createElement('tr');
+
+                            // Format created_at to display date and time
+                            const createdAt = new Date(user.created_at);
+                            const formattedDate = createdAt.toLocaleString(); // Change date to a locale-specific string
+
+                            row.innerHTML = `
+                    <td class="id-column">${user.id}</td>
+                    <td class="price-column">${user.total_price}</td>
+                    <td class="delivery-column">
+                        <div class="delivery-column-item">${user.delivery_to}</div>
+                    </td>
+                    <td class="created-column">
+                        <div class="created-column-item">${formattedDate}</div>
+                    </td>
+                    <td class="actions-column">
+                        <div class="btn-wrap">
+                            <button class="js-toggle btn-primary btn btn-admin--small btn--no-margin edit-btn"
+                                data-user='${JSON.stringify(user)}' toggle-target="#editModal">Edit</button>
+                            <button class="js-toggle btn--danger btn btn-admin--small btn--no-margin"
+                                toggle-target="#deleteModal">Delete</button>
+                        </div>
+                    </td>
+                `;
+
+                            tableBody.appendChild(row);
+                        });
+
+                        // Add event listener for edit buttons
+                        const editButtons = document.querySelectorAll('.edit-btn');
+                        editButtons.forEach(button => {
+                            button.addEventListener('click', function () {
+                                const user = JSON.parse(button.dataset.user);
+                                // Fill in edit modal with user data
+                                document.getElementById('edit-product-id').value = user.id_user;
+                                document.getElementById('edit-product-price').value = user.total_price;
+                                document.getElementById('edit-quantity').value = user.delivery_to;
+
+                                // Show edit modal
+                                document.querySelector('#editModal').classList.remove('hide');
+                            });
+                        });
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }
+            catch (error) {
+                console.log("Fetch error: " + error.message);
+            }
+            finally {
+                // Ẩn spinner khi dữ liệu đã tải xong
+                document.getElementById("tableLoader").style.display = "none";
+            }
+        }
+        function getProductIdFromRow(button) {
+            const row = button.closest('tr');
+            return row ? row.querySelector('.id-column').textContent : null;
+        }
+        document.getElementById('productTable').addEventListener('click', function (event) {
+            const target = event.target;
+            if (target.classList.contains('btn--danger') && target.textContent === "Delete") {
+                const productId = getProductIdFromRow(target);
+                if (productId) {
+                    // Set the product ID somewhere to retrieve later (e.g., in a hidden input field or a data attribute)
+                    document.getElementById('deleteConfirm').setAttribute('data-product-id', productId);
+                    const deleteModal = document.getElementById('deleteModal');
+                    deleteModal.classList.remove('hide');
+                    deleteModal.classList.add('show');
+                }
+            }
+        })
+    </script>
+
+    <script src="./assets/js/scripts-admin.js"></script>
+</body>
+
+</html>

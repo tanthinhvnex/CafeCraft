@@ -2040,7 +2040,7 @@ html {
   }
 }
 .input-text-btn {
-  width: 360px;
+  width: 350px;
 }
 @media (max-width: 991.98px) {
   .input-text-btn {
@@ -2492,6 +2492,10 @@ html {
 .btn--danger {
   color: #fff;
   background-color: #ed4337;
+}
+.btn--success {
+  color: #fff;
+  background-color: #28a745;
 }
 .btn[disabled], .btn--disabled {
   opacity: 0.5;
@@ -3303,6 +3307,8 @@ html {
   margin: 20px 0;
 }
 .text-content img {
+  object-fit: cover;
+  max-height: 600px;
   display: block;
   margin-left: auto;
   margin-right: auto;
