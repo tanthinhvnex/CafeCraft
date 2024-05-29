@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Checkout | Grocery Mart</title>
+  <title>Checkout | CafeCraft</title>
 
   <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="76x76" href="./assets/favicon/apple-touch-icon.png" />
@@ -37,6 +37,7 @@
 
     function loadCard() {
       const productsInCart = JSON.parse(localStorage.getItem("cart")) || [];
+      console.log(productsInCart);
       const container = document.getElementById("cardContainer");
 
       if (!container) {
@@ -63,7 +64,7 @@
 
         const ele = ` <article class="cart-item">
                                     <a href="./product-detail.html">
-                                        <img src="${product.image_src}" alt="" class="cart-item__thumb" />
+                                        <img src="${product.images[0]}" alt="" class="cart-item__thumb" />
                                     </a>
                                     <div class="cart-item__content">
                                         <div class="cart-item__content-left">
@@ -134,6 +135,7 @@
 
       localStorage.setItem("cart", JSON.stringify(productsInCart));
       reloadCart();
+      updateCartNotification();
     }
 
     function deleteProduct(productID) {
@@ -154,8 +156,8 @@
       } else {
         localStorage.setItem("cart", JSON.stringify(productsInCart));
       }
-
       loadCard();
+      updateCartNotification();
     }
 
     function getExtraPrice(size) {
@@ -260,16 +262,16 @@
                   <div class="col-4 col-xxl-5">
                     <div class="cart-info__row">
                       <span>Subtotal:</span>
-                      <span id="bottomSubTotal">$191.65</span>
+                      <span id="bottomSubTotal">$0</span>
                     </div>
                     <div class="cart-info__row">
                       <span>Shipping:</span>
-                      <span id="bottomShippingText">$10.00</span>
+                      <span id="bottomShippingText">$0</span>
                     </div>
                     <div class="cart-info__separate"></div>
                     <div class="cart-info__row cart-info__row--bold">
                       <span>Total:</span>
-                      <span id="bottomTotal">$201.65</span>
+                      <span id="bottomTotal">$0</span>
                     </div>
                   </div>
                 </div>
@@ -281,21 +283,21 @@
               <div class="cart-info__row">
                 <span>Subtotal
                   <span class="cart-info__sub-label">(items)</span></span>
-                <span id="productQuantity">3</span>
+                <span id="productQuantity">0</span>
               </div>
               <div class="cart-info__row">
                 <span>Price
                   <span class="cart-info__sub-label">(Total)</span></span>
-                <span id="totalPrice">$191.65</span>
+                <span id="totalPrice">$0</span>
               </div>
               <div class="cart-info__row">
                 <span>Shipping</span>
-                <span id="shippingText">$10.00</span>
+                <span id="shippingText">$0</span>
               </div>
               <div class="cart-info__separate"></div>
               <div class="cart-info__row">
                 <span>Estimated Total</span>
-                <span id="estimatedTotal">$201.65</span>
+                <span id="estimatedTotal">$0</span>
               </div>
               <a href="./shipping.html" class="cart-info__next-btn btn btn--primary btn--rounded">
                 Continue to checkout

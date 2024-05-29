@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Grocery Mart</title>
+  <title>CafeCraft</title>
 
   <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="76x76" href="assets/favicon/apple-touch-icon.png" />
@@ -29,15 +29,15 @@
   <header id="header" class="header"></header>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const user = localStorage.getItem("user") || undefined;
+      const user = localStorage.getItem("user");
       if (user) {
-        load("#header", "./templates/header-logined.html");
-        updateCartNotification()
+        load("#header", "./templates/header-logined.html", checkLogOut);
+        updateCartNotification();
       } else {
         load("#header", "./templates/header.html");
       }
-      checkLogOut()
     });
+
   </script>
 
   <div class="container home">
@@ -219,6 +219,7 @@
         };
       });
     });
+
   </script>
 </body>
 

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Grocery Mart</title>
+  <title>CafeCraft</title>
 
   <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="76x76" href="./assets/favicon/apple-touch-icon.png" />
@@ -143,13 +143,13 @@
                         <div class="form__tag prod-info__tag">
                           <label class="radio" for="medium">
                             <input value="medium" type="radio" name="size" id="medium" />
-                            Medium (1000g) ($10)
+                            Medium (1000g) (+$10)
                           </label>
                         </div>
                         <div class="form__tag prod-info__tag">
                           <label class="radio" for="large">
                             <input value="large" type="radio" name="size" id="large" />
-                            Large (2000g) ($20)
+                            Large (2000g) (+$20)
                           </label>
                         </div>
                       </div>
@@ -188,6 +188,7 @@
                           </button>
                           <button class="like-btn prod-info__like-btn">
                             <img src="./assets/icons/heart.svg" alt="" class="like-btn__icon icon" />
+                            <img src="./assets/icons/heart-red.svg" alt="" class="like-btn__icon--liked" />
                           </button>
                         </div>
                       </div>
@@ -603,9 +604,9 @@
               ? product.price - product.price * (product.discount / 100)
               : 500,
             name: product ? product.name : "Aura Almond Joy",
-            image_src: product
-              ? product.image_src
-              : "https://trungnguyenecoffee.com/wp-content/uploads/2021/07/ST8-250g.jpg",
+            images: product
+              ? product.images
+              : ["https://trungnguyenecoffee.com/wp-content/uploads/2021/07/ST8-250g.jpg"],
           });
         }
 
