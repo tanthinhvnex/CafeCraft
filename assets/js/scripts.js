@@ -10,7 +10,7 @@ const $$ = document.querySelectorAll.bind(document);
  *  load("#parent", "./path-to-template.html");
  * </script>
  */
-function load(selector, path) {
+function load(selector, path, callback) {
     const cached = localStorage.getItem(path);
     if (cached) {
         $(selector).innerHTML = cached;
@@ -22,6 +22,9 @@ function load(selector, path) {
             if (html !== cached) {
                 $(selector).innerHTML = html;
                 localStorage.setItem(path, html);
+            }
+            if (callback) {
+                callback();
             }
         })
         .finally(() => {
@@ -231,10 +234,20 @@ function hideSpinner() {
 }
 
 function checkLogOut() {
-    logOut = document.getElementById("logout")
-    logOut.addEventListener("click", function () {
-        localStorage.removeItem("user")
-    })
+    console.log("CheckoutLocalStorage activez");
+    const logoutButton = document.getElementById('logout');
+    if (logoutButton) {
+        console.log("LogoutButton activez");
+        logoutButton.addEventListener('click', function (event) {
+            event.preventDefault(); // Ngăn chặn hành động mặc định của liên kết
+            console.log('localStorage before clear:', localStorage);
+            localStorage.clear(); // Xóa localStorage
+            console.log('localStorage after clear:', localStorage);
+            window.location.href = './sign-in.html'; // Chuyển hướng đến trang đăng nhập
+        });
+    } else {
+        console.log("LogoutButton inactivez");
+    }
 }
 
 // let cartNotification
@@ -251,3 +264,19 @@ function updateCartNotification() {
     }
     cartPrice.innerHTML = `$ ${price}`
 }
+
+// Lấy tham chiếu đến nút logout
+let logoutButton
+window.addEventListener('DOMContentLoaded', function () {
+    logoutButton = document.getElementById('logout');
+    // Kiểm tra xem nút logout có tồn tại không
+    if (logoutButton) {
+        // Nếu tồn tại, thêm event listener cho sự kiện 'click'
+        logoutButton.addEventListener('click', clearAllLocalStorage);
+    }
+});
+
+function clearAllLocalStorage() {
+    localStorage.clear();
+}
+// clearAllLocalStorage();
